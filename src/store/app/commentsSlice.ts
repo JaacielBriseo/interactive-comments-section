@@ -3,7 +3,6 @@ import { CommentsSliceValues } from '../../types';
 import data from '../../data/data.json';
 
 const initialValues: CommentsSliceValues = { ...data };
-console.log(data);
 export const commentsSlice = createSlice({
 	name: 'comments',
 	initialState: initialValues,

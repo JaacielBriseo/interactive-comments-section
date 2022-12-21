@@ -7,7 +7,7 @@ export interface AuthSliceValues {
 	errorMessage: null | string;
 }
 
-interface Comment {
+export interface Comment {
 	content: string;
 	createdAt: string;
 	id: number;

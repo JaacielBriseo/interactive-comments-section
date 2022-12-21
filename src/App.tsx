@@ -1,6 +1,9 @@
+import { CommentsFromPeople } from './components';
 
 export const App = () => {
-  return (
-    <div>App</div>
-  )
-}
+	return (
+		<div className='py-10 font-Rubik'>
+			<CommentsFromPeople />
+		</div>
+	);
+};
