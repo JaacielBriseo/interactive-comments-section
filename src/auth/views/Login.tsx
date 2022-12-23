@@ -2,9 +2,13 @@ import { Formik, Form } from 'formik';
 import { startLoginWithEmail, useAppDispatch } from '../../store';
 import * as Yup from 'yup';
 import { InputField } from '../components';
+import { startGoogleSignIn } from '../../store/auth';
 
 export const Login = () => {
 	const dispatch = useAppDispatch();
+	const onGoogleClick = () => {
+		dispatch(startGoogleSignIn());
+	};
 	const validationSchema = Yup.object().shape({
 		email: Yup.string().email('Invalid email address').required('Email is required'),
 		password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
@@ -30,10 +34,17 @@ export const Login = () => {
 							<InputField type='password' name='password' placeholder='Password' errors={errors} touched={touched} />
 							<button
 								type='submit'
-								className=' w-full py-2 mt-8 rounded-full bg-blue-400 text-gray-100 focus:outline-none '
+								className=' w-1/3 py-2 mt-8 rounded-full bg-blue-400 text-gray-100 focus:outline-none '
 								disabled={isSubmitting}
 							>
 								Login
+							</button>
+							<button
+								onClick={onGoogleClick}
+								type='button'
+								className=' w-1/3 py-2 mt-8 rounded-full bg-SoftRed text-gray-100 focus:outline-none '
+							>
+								Google
 							</button>
 						</div>
 					</Form>

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { CommentsSliceValues } from '../../types';
 import data from '../../data/data.json';
+import { useAppSelector } from '../hooks';
 
 const initialValues: CommentsSliceValues = { ...data };
 export const commentsSlice = createSlice({
@@ -31,8 +32,12 @@ export const commentsSlice = createSlice({
 				comment.replies = comment.replies.filter((reply) => reply.id !== id);
 			});
 		},
+		setUser: (state: CommentsSliceValues, { payload }) => {
+			state.currentUser.username = payload.username;
+			state.currentUser.image = payload.image;
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { addComment, editComment, deleteComment } = commentsSlice.actions;
+export const { addComment, editComment, deleteComment, setUser } = commentsSlice.actions;

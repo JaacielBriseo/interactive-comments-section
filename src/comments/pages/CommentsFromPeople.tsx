@@ -1,6 +1,6 @@
 import { CommentCardLayout } from '../../layout';
 import { useAppSelector } from '../../store';
-import { CardContent, CardFooter, CardHeader } from '../components';
+import { AddComment, CardContent, CardFooter, CardHeader } from '../components';
 
 export const CommentsFromPeople = () => {
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
@@ -9,9 +9,16 @@ export const CommentsFromPeople = () => {
 			{comments.map((comment) => (
 				<div key={comment.id}>
 					<CommentCardLayout className='mainCommentCard'>
-						<CardHeader img={comment.user.image.png} createdAt={comment.createdAt} username={comment.user.username} />
+						<CardHeader
+							img={
+								comment.user.username === currentUser.username ? currentUser.image!.toString() : comment.user.image.png
+							}
+							createdAt={comment.createdAt}
+							username={comment.user.username}
+							user={currentUser.username === comment.user.username}
+						/>
 						<CardContent content={comment.content} />
-						<CardFooter score={comment.score} />
+						<CardFooter score={comment.score} user={currentUser.username === comment.user.username} id={comment.id}/>
 					</CommentCardLayout>
 					{comment.replies?.length !== 0 ? (
 						<>
@@ -25,7 +32,7 @@ export const CommentsFromPeople = () => {
 											user
 										/>
 										<CardContent content={replie.content} />
-										<CardFooter score={replie.score} user id={replie.id}/>
+										<CardFooter score={replie.score} user id={replie.id} />
 									</CommentCardLayout>
 								) : (
 									<CommentCardLayout key={replie.createdAt} className='replyCommentCard'>
@@ -45,6 +52,7 @@ export const CommentsFromPeople = () => {
 					)}
 				</div>
 			))}
+			<AddComment />
 		</>
 	);
 };

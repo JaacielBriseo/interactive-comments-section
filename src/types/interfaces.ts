@@ -38,10 +38,13 @@ export interface Comment {
 export interface CommentsSliceValues {
 	comments: Comment[];
 	currentUser: {
-		image: {
-			png: string;
-			webp: string;
-		};
+		image:
+			| null
+			| string
+			| {
+					png: string;
+					webp: string;
+			  };
 		username: string;
 	};
 }
@@ -49,7 +52,7 @@ export interface CardHeaderProps {
 	img: string;
 	username: string;
 	createdAt: string;
-	user?: boolean
+	user?: boolean;
 }
 export interface FooterItemProps {
 	icon: string;
