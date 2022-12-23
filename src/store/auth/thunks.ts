@@ -1,10 +1,13 @@
 import { checkingCredentials, login, logout } from './';
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
 import { AuthSliceValues, CreatingUserProps } from '../../types';
-import { loginWithEmailPassword, registerUserWithEmailPassword, signInWithGoogle } from '../../firebase/providers';
+import {
+	loginWithEmailPassword,
+	logoutFirebase,
+	registerUserWithEmailPassword,
+	signInWithGoogle,
+} from '../../firebase/providers';
 import { setUser } from '../app';
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { RootState } from '../store';
 
 export const checkingAuth = () => {
 	return async (
@@ -77,5 +80,22 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
 		if (!ok) return dispatch(logout(errorMessage));
 		dispatch(setUser({ username: displayName, image: photoURL }));
 		dispatch(login({ uid, displayName, email, photoURL }));
+	};
+};
+
+export const startLogout = () => {
+	return async (
+		dispatch: ThunkDispatch<
+			{
+				auth: AuthSliceValues;
+			},
+			undefined,
+			AnyAction
+		> &
+			Dispatch<AnyAction>
+	) => {
+		await logoutFirebase();
+		dispatch(setUser({}));
+		dispatch(logout(null));
 	};
 };

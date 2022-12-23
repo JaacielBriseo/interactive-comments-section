@@ -38,14 +38,7 @@ export interface Comment {
 export interface CommentsSliceValues {
 	comments: Comment[];
 	currentUser: {
-		image:
-			| null
-			| string
-			| {
-					png: string;
-					webp: string;
-			  };
-		username: string;
+		[x: string]: any;
 	};
 }
 export interface CardHeaderProps {

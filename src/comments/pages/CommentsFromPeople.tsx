@@ -1,11 +1,12 @@
 import { CommentCardLayout } from '../../layout';
 import { useAppSelector } from '../../store';
-import { AddComment, CardContent, CardFooter, CardHeader } from '../components';
+import { AddComment, CardContent, CardFooter, CardHeader, LogoutButton } from '../components';
 
 export const CommentsFromPeople = () => {
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
 	return (
 		<>
+		<LogoutButton/>
 			{comments.map((comment) => (
 				<div key={comment.id}>
 					<CommentCardLayout className='mainCommentCard'>

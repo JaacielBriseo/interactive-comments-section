@@ -1,10 +1,15 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthRoutes } from '../auth/routes';
 import { CommentsRoutes } from '../comments/routes';
-import { useAppSelector } from '../store/hooks';
+import { CheckingAuth } from '../ui';
+import { useCheckAuth } from '../hooks';
 
 export const AppRouter = () => {
-	const { status } = useAppSelector((state) => state.auth);
+	const status = useCheckAuth();
+
+	if (status === 'checking') {
+		return <CheckingAuth />;
+	}
 	return (
 		<Routes>
 			{status === 'authenticated' ? (
