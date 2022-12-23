@@ -1,4 +1,4 @@
-import { CardHeaderProps } from '../types';
+import { CardHeaderProps } from '../../types';
 
 export const CardHeader = ({ img, username, createdAt, user }: CardHeaderProps) => {
 	return (

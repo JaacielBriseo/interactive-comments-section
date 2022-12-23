@@ -1,6 +1,6 @@
-import { CommentCardLayout } from '../layout';
-import { useAppSelector } from '../store';
-import { CardContent, CardFooter, CardHeader } from '.';
+import { CommentCardLayout } from '../../layout';
+import { useAppSelector } from '../../store';
+import { CardContent, CardFooter, CardHeader } from '../components';
 
 export const CommentsFromPeople = () => {
 	const { comments, currentUser } = useAppSelector((state) => state.comments);

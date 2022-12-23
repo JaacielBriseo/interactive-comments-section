@@ -1,10 +1,9 @@
-import { AddComment, CommentsFromPeople } from './components';
+import { AppRouter } from './router/AppRouter';
 
 export const App = () => {
 	return (
 		<div className='py-5 font-Rubik'>
-			<CommentsFromPeople />
-			<AddComment />
+			<AppRouter />
 		</div>
 	);
 };

@@ -1,4 +1,4 @@
-import { FooterItemProps } from '../types';
+import { FooterItemProps } from '../../types';
 
 export const FooterItem = ({ icon, color, text, ...props }: FooterItemProps) => {
 	return (

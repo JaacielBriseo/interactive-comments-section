@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { addComment } from '../store';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { addComment } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 export const AddComment = () => {
 	const dispatch = useAppDispatch();
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
