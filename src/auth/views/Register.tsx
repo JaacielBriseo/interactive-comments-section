@@ -1,8 +1,11 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { InputField } from '../components';
+import { useAppDispatch } from '../../store/hooks';
+import { startCreatingUserWithEmailPassword } from '../../store';
 
 export const Register = () => {
+	const dispatch = useAppDispatch();
 	const validationSchema = Yup.object().shape({
 		email: Yup.string().email('Invalid email address').required('Email is required'),
 		password: Yup.string()
@@ -29,7 +32,13 @@ export const Register = () => {
 			validationSchema={validationSchema}
 			onSubmit={(values, { setSubmitting }) => {
 				setTimeout(() => {
-					console.log(values);
+					dispatch(
+						startCreatingUserWithEmailPassword({
+							email: values.email,
+							password: values.password,
+							displayName: values.name,
+						})
+					);
 					setSubmitting(false);
 				}, 400);
 			}}

@@ -1,7 +1,7 @@
 import { checkingCredentials, login, logout } from './';
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
 import { AuthSliceValues } from '../../types';
-import { signInWithGoogle } from '../../firebase/providers';
+import { registerUserWithEmailPassword, signInWithGoogle } from '../../firebase/providers';
 import { setUser } from '../app';
 
 export const checkingAuth = () => {
@@ -52,5 +52,32 @@ export const startGoogleSignIn = () => {
 
 		dispatch(login(result));
 		dispatch(setUser({ username: result.displayName, image: result.photoURL }));
+	};
+};
+interface startCreatingUserWithEmailPasswordProps {
+	email: string;
+	password: string;
+	displayName: string;
+}
+export const startCreatingUserWithEmailPassword = ({
+	email,
+	password,
+	displayName,
+}: startCreatingUserWithEmailPasswordProps) => {
+	return async (
+		dispatch: ThunkDispatch<
+			{
+				auth: AuthSliceValues;
+			},
+			undefined,
+			AnyAction
+		> &
+			Dispatch<AnyAction>
+	) => {
+		dispatch(checkingCredentials());
+		const { ok, uid, photoURL, errorMessage } = await registerUserWithEmailPassword({ password, displayName, email });
+		if (!ok) return dispatch(logout(errorMessage));
+		dispatch(setUser({ username: displayName, image: photoURL }));
+		dispatch(login({ uid, displayName, email, photoURL }));
 	};
 };
