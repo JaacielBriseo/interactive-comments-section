@@ -1,4 +1,19 @@
+import Swal from 'sweetalert2';
 export const CardFooter = ({ score, user }: { score: number; user?: boolean }) => {
+	const alertDelete = () => {
+		Swal.fire({
+			title: 'Delete Comment',
+			text: 'Are you sure you want to delete this comment? This will remove the comment and cannot be undo',
+			icon: 'warning',
+			showDenyButton: true,
+			confirmButtonText: 'Yes, Delete',
+			denyButtonText: `Cancel`,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.fire('Comment Deleted');
+			}
+		});
+	};
 	return (
 		<div className='flex justify-between '>
 			<div className='flex items-center p-1 justify-between bg-VeryLightGray w-20 h-8'>
@@ -12,7 +27,7 @@ export const CardFooter = ({ score, user }: { score: number; user?: boolean }) =
 			</div>
 			{user ? (
 				<div className='flex items-center space-x-2'>
-					<button className='flex items-center m-1 text-SoftRed space-x-1'>
+					<button onClick={alertDelete} className='flex items-center m-1 text-SoftRed space-x-1'>
 						<img src='./assets/icon-delete.svg' alt='reply' className='w-4 h-4' />
 						<h1 className='font-bold'>Delete</h1>
 					</button>
