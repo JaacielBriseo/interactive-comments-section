@@ -3,3 +3,4 @@ export * from './CardContent';
 export * from './CardFooter';
 export * from './CardHeader';
 export * from './CommentsFromPeople';
+export * from './FooterItem';

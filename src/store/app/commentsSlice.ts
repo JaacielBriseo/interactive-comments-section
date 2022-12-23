@@ -6,8 +6,12 @@ const initialValues: CommentsSliceValues = { ...data };
 export const commentsSlice = createSlice({
 	name: 'comments',
 	initialState: initialValues,
-	reducers: {},
+	reducers: {
+		addComment: (state: CommentsSliceValues, { payload }) => {
+			state.comments.push(payload)
+		},
+	},
 });
 
 // Action creators are generated for each case reducer function
-export const {} = commentsSlice.actions;
+export const { addComment } = commentsSlice.actions;

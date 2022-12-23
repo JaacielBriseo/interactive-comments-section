@@ -51,3 +51,9 @@ export interface CardHeaderProps {
 	createdAt: string;
 	user?: boolean
 }
+export interface FooterItemProps {
+	icon: string;
+	color?: string;
+	text?: string;
+	[x: string]: any;
+}
