@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { FooterItem } from '.';
-export const CardFooter = ({ score, user }: { score: number; user?: boolean }) => {
+import { useAppDispatch, editComment, deleteComment } from '../store';
+export const CardFooter = ({ score, user, id }: { score: number; user?: boolean; id?: number }) => {
 	const [counter, setCounter] = useState(score);
+	const dispatch = useAppDispatch();
 	const alertDelete = () => {
 		Swal.fire({
 			title: 'Delete Comment',
@@ -14,7 +16,19 @@ export const CardFooter = ({ score, user }: { score: number; user?: boolean }) =
 		}).then((result) => {
 			if (result.isConfirmed) {
 				Swal.fire('Comment Deleted');
+				dispatch(deleteComment(id))
 			}
+		});
+	};
+	const handleEditComment = () => {
+		Swal.fire({
+			input: 'textarea',
+			inputLabel: 'Message',
+			inputPlaceholder: 'Type your message here...',
+			showCancelButton: true,
+		}).then((result) => {
+			if (!result.isConfirmed || result.value === '') return;
+			dispatch(editComment({ id, content: result.value }));
 		});
 	};
 	const plusClick = () => {
@@ -34,7 +48,7 @@ export const CardFooter = ({ score, user }: { score: number; user?: boolean }) =
 			{user ? (
 				<div className='flex items-center space-x-2'>
 					<FooterItem function={alertDelete} icon='icon-delete' color='text-SoftRed' text='Delete' />
-					<FooterItem icon='icon-edit' color='text-Moderateblue' text='Edit' />
+					<FooterItem function={handleEditComment} icon='icon-edit' color='text-Moderateblue' text='Edit' />
 				</div>
 			) : (
 				<FooterItem color='text-Moderateblue' icon='icon-reply' text='Reply' />

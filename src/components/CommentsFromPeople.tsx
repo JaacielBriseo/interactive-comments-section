@@ -25,7 +25,7 @@ export const CommentsFromPeople = () => {
 											user
 										/>
 										<CardContent content={replie.content} />
-										<CardFooter score={replie.score} user />
+										<CardFooter score={replie.score} user id={replie.id}/>
 									</CommentCardLayout>
 								) : (
 									<CommentCardLayout key={replie.createdAt} className='replyCommentCard'>

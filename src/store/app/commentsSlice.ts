@@ -8,10 +8,18 @@ export const commentsSlice = createSlice({
 	initialState: initialValues,
 	reducers: {
 		addComment: (state: CommentsSliceValues, { payload }) => {
-			state.comments.push(payload)
+			state.comments.push(payload);
+		},
+		editComment: (state: CommentsSliceValues, { payload }) => {},
+		deleteComment: (state: CommentsSliceValues, { payload }) => {
+			const id = payload;
+			state.comments = state.comments.filter((comment) => comment.id !== id);
+			state.comments.forEach((comment) => {
+				comment.replies = comment.replies.filter((reply) => reply.id !== id);
+			});
 		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { addComment } = commentsSlice.actions;
+export const { addComment, editComment, deleteComment } = commentsSlice.actions;
