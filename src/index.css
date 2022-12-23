@@ -6,3 +6,10 @@ html,
 body {
 	background-color: hsl(239, 57%, 85%);
 }
+
+.mainCommentCard {
+	@apply flex flex-col justify-between w-80 max-w-[343px] h-72 mx-auto p-3 bg-White m-5 rounded-lg
+}
+.replyCommentCard {
+	@apply w-72 p-3 bg-White rounded-lg mx-auto my-5 space-y-3
+}

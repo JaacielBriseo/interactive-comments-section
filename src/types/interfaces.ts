@@ -11,7 +11,20 @@ export interface Comment {
 	content: string;
 	createdAt: string;
 	id: number;
-	replies?: Comment[];
+	replies: {
+		content: string;
+		createdAt: string;
+		id: number;
+		replyingTo: string;
+		score: number;
+		user: {
+			image: {
+				png: string;
+				webp: string;
+			};
+			username: string;
+		};
+	}[];
 	score: number;
 	user: {
 		image: {
@@ -31,4 +44,10 @@ export interface CommentsSliceValues {
 		};
 		username: string;
 	};
+}
+export interface CardHeaderProps {
+	img: string;
+	username: string;
+	createdAt: string;
+	user?: boolean
 }

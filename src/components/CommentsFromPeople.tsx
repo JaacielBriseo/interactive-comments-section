@@ -1,33 +1,48 @@
+import { CommentCardLayout } from '../layout';
 import { useAppSelector } from '../store';
+import { CardContent, CardFooter, CardHeader } from '.';
 
 export const CommentsFromPeople = () => {
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
 	return (
 		<>
 			{comments.map((comment) => (
-				<div
-					key={comment.id}
-					className='flex flex-col justify-between w-80 max-w-[343px] h-72 mx-auto p-3 bg-White m-5 rounded-lg'
-				>
-					<div className='flex justify-between items-center w-60'>
-						<img src={comment.user.image.png} alt='user' className='w-8 h-8' />
-						<h1 className='text-DarkBlue font-bold'>{comment.user.username}</h1>
-						<p className='text-GrayishBlue'>{comment.createdAt}</p>
-					</div>
-					<div className='max-w-[311px] text-GrayishBlue'>
-						<p>{comment.content}</p>
-					</div>
-					<div className='flex justify-between w-72'>
-						<div className='flex items-center p-1 justify-between bg-VeryLightGray w-20 h-8'>
-							<img src='./assets/icon-plus.svg' alt='plus' className='text-LightGrayishBlue' />
-							<p className='text-Moderateblue font-medium'>{comment.score}</p>
-							<img src='./assets/icon-minus.svg' alt='minus' className='text-LightGrayishBlue' />
-						</div>
-						<div className='flex items-center space-x-1 w-14 h-6'>
-							<img src='./assets/icon-reply.svg' alt='reply' className='w-4 h-4' />
-							<h3 className='text-Moderateblue font-bold'>Reply</h3>
-						</div>
-					</div>
+				<div key={comment.id}>
+					<CommentCardLayout className='mainCommentCard'>
+						<CardHeader img={comment.user.image.png} createdAt={comment.createdAt} username={comment.user.username} />
+						<CardContent content={comment.content} />
+						<CardFooter score={comment.score} />
+					</CommentCardLayout>
+					{comment.replies?.length !== 0 ? (
+						<>
+							{comment.replies.map((replie) =>
+								replie.user.username === currentUser.username ? (
+									<CommentCardLayout key={replie.createdAt} className='replyCommentCard'>
+										<CardHeader
+											createdAt={replie.createdAt}
+											img={replie.user.image.png}
+											username={replie.user.username}
+											user
+										/>
+										<CardContent content={replie.content} />
+										<CardFooter score={replie.score} user />
+									</CommentCardLayout>
+								) : (
+									<CommentCardLayout key={replie.createdAt} className='replyCommentCard'>
+										<CardHeader
+											createdAt={replie.createdAt}
+											img={replie.user.image.png}
+											username={replie.user.username}
+										/>
+										<CardContent content={replie.content} />
+										<CardFooter score={replie.score} />
+									</CommentCardLayout>
+								)
+							)}
+						</>
+					) : (
+						<></>
+					)}
 				</div>
 			))}
 		</>
