@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AuthSliceValues } from '../../types';
 
 const initialValues: AuthSliceValues = {
-	status: 'checking',
+	status: 'not-authenticated', //checking,authenticated, not-authenticated
 	uid: null,
 	email: null,
 	displayName: null,
