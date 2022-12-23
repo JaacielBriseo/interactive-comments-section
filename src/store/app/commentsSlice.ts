@@ -10,7 +10,20 @@ export const commentsSlice = createSlice({
 		addComment: (state: CommentsSliceValues, { payload }) => {
 			state.comments.push(payload);
 		},
-		editComment: (state: CommentsSliceValues, { payload }) => {},
+		editComment: (state: CommentsSliceValues, { payload }) => {
+			const { id, content } = payload;
+			const comment = state.comments.find((comment) => comment.id === id);
+			if (comment) {
+				comment.content = content;
+			} else {
+				state.comments.forEach((comment) => {
+					const reply = comment.replies.find((reply) => reply.id === id);
+					if (reply) {
+						reply.content = content;
+					}
+				});
+			}
+		},
 		deleteComment: (state: CommentsSliceValues, { payload }) => {
 			const id = payload;
 			state.comments = state.comments.filter((comment) => comment.id !== id);
