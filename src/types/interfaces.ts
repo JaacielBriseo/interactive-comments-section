@@ -60,3 +60,8 @@ export interface FooterItemProps {
 	text?: string;
 	[x: string]: any;
 }
+export interface CreatingUserProps {
+	email: string;
+	password: string;
+	displayName: string;
+}

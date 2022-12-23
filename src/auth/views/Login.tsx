@@ -1,8 +1,7 @@
 import { Formik, Form } from 'formik';
-import { startLoginWithEmail, useAppDispatch } from '../../store';
+import { startLoginWithEmail, useAppDispatch, startGoogleSignIn } from '../../store';
 import * as Yup from 'yup';
 import { InputField } from '../components';
-import { startGoogleSignIn } from '../../store/auth';
 
 export const Login = () => {
 	const dispatch = useAppDispatch();
@@ -20,7 +19,7 @@ export const Login = () => {
 			validationSchema={validationSchema}
 			onSubmit={(values, { setSubmitting }) => {
 				setTimeout(() => {
-					dispatch(startLoginWithEmail(values));
+					dispatch(startLoginWithEmail({ email: values.email, password: values.password }));
 					setSubmitting(false);
 				}, 400);
 			}}

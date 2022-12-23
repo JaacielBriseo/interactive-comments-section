@@ -1,8 +1,10 @@
 import { checkingCredentials, login, logout } from './';
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
-import { AuthSliceValues } from '../../types';
-import { registerUserWithEmailPassword, signInWithGoogle } from '../../firebase/providers';
+import { AuthSliceValues, CreatingUserProps } from '../../types';
+import { loginWithEmailPassword, registerUserWithEmailPassword, signInWithGoogle } from '../../firebase/providers';
 import { setUser } from '../app';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
 export const checkingAuth = () => {
 	return async (
@@ -31,7 +33,11 @@ export const startLoginWithEmail = ({ email, password }: { email: string; passwo
 			Dispatch<AnyAction>
 	) => {
 		dispatch(checkingCredentials());
-		dispatch(login({ email, password }));
+		const result = await loginWithEmailPassword({ email, password });
+		console.log(result);
+		if (!result.ok) return dispatch(logout(result.errorMessage));
+		dispatch(login(result));
+		dispatch(setUser({ username: result.displayName, image: result.photoURL }));
 	};
 };
 
@@ -54,16 +60,8 @@ export const startGoogleSignIn = () => {
 		dispatch(setUser({ username: result.displayName, image: result.photoURL }));
 	};
 };
-interface startCreatingUserWithEmailPasswordProps {
-	email: string;
-	password: string;
-	displayName: string;
-}
-export const startCreatingUserWithEmailPassword = ({
-	email,
-	password,
-	displayName,
-}: startCreatingUserWithEmailPasswordProps) => {
+
+export const startCreatingUserWithEmailPassword = ({ email, password, displayName }: CreatingUserProps) => {
 	return async (
 		dispatch: ThunkDispatch<
 			{
