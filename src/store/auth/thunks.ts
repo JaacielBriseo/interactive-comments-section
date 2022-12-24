@@ -8,6 +8,8 @@ import {
 	signInWithGoogle,
 } from '../../firebase/providers';
 import { setUser } from '../app';
+import { RootState } from '../store';
+import { loadNotes } from '../../helpers';
 
 export const checkingAuth = () => {
 	return async (
@@ -97,5 +99,21 @@ export const startLogout = () => {
 		await logoutFirebase();
 		dispatch(setUser({}));
 		dispatch(logout(null));
+	};
+};
+
+export const startLoadingComments = () => {
+	return async (
+		dispatch: ThunkDispatch<
+			{
+				auth: AuthSliceValues;
+			},
+			undefined,
+			AnyAction
+		> &
+			Dispatch<AnyAction>,
+		getState: () => RootState
+	) => {
+		await loadNotes()
 	};
 };

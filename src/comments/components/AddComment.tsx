@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { addComment } from '../../store';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { startNewComment } from '../../store/app/thunks';
 export const AddComment = () => {
 	const dispatch = useAppDispatch();
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
@@ -8,7 +9,7 @@ export const AddComment = () => {
 	const onSubmit = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		dispatch(
-			addComment({
+			startNewComment({
 				content: comment,
 				createdAt: new Date().getDate(),
 				id: comments.length + 1,

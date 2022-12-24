@@ -13,6 +13,7 @@ export const useCheckAuth = () => {
 			dispatch(login({ uid, email, displayName, photoURL }));
 			dispatch(setUser({ image: photoURL, username: displayName }));
 		});
+		// eslint-disable-next-line
 	}, []);
 	return status
     

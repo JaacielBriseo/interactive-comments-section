@@ -1,12 +1,18 @@
 import { CommentCardLayout } from '../../layout';
 import { useAppSelector } from '../../store';
 import { AddComment, CardContent, CardFooter, CardHeader, LogoutButton } from '../components';
+import { useEffect } from 'react';
+import { loadNotes } from '../../helpers';
 
 export const CommentsFromPeople = () => {
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
+	useEffect(() => {
+		loadNotes();
+	}, []);
+
 	return (
 		<>
-		<LogoutButton/>
+			<LogoutButton />
 			{comments.map((comment) => (
 				<div key={comment.id}>
 					<CommentCardLayout className='mainCommentCard'>
@@ -19,7 +25,7 @@ export const CommentsFromPeople = () => {
 							user={currentUser.username === comment.user.username}
 						/>
 						<CardContent content={comment.content} />
-						<CardFooter score={comment.score} user={currentUser.username === comment.user.username} id={comment.id}/>
+						<CardFooter score={comment.score} user={currentUser.username === comment.user.username} id={comment.id} />
 					</CommentCardLayout>
 					{comment.replies?.length !== 0 ? (
 						<>

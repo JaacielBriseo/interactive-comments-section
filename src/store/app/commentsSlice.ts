@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { CommentsSliceValues } from '../../types';
 import data from '../../data/data.json';
-import { useAppSelector } from '../hooks';
 
 const initialValues: CommentsSliceValues = { ...data };
 export const commentsSlice = createSlice({
