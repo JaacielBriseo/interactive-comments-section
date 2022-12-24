@@ -50,7 +50,7 @@ export const CardFooter = ({ score, user, id, dbid }: { score: number; user?: bo
 			if (!result.isConfirmed || result.value === '') return;
 			const reply = result.value;
 			dispatch(startCreatingReply(dbid, id, reply));
-			dispatch(addReply({ id, content: reply }));
+			
 		});
 	};
 	return (

@@ -4,7 +4,7 @@ import { FirebaseDB } from '../../firebase/config';
 import { RootState } from '../store';
 import { loadComments } from '../../helpers';
 import { AuthSliceValues, CommentsSliceValues, NewCommentProps } from '../../types';
-import { deleteComment, editComment, setComments } from '.';
+import { addReply, deleteComment, editComment, setComments } from '.';
 
 export const startNewComment = ({ content, createdAt, id, replies, score, user }: NewCommentProps) => {
 	return async (
@@ -79,17 +79,26 @@ export const startCreatingReply = (dbid: string, idToReply: number, content: str
 		getState: () => RootState
 	) => {
 		const { comments } = getState().comments;
-		const comment = comments.find((comment) => comment.id === idToReply);
-		if (comment) {
-		console.log(comment);
-		} else {
-			comments.forEach((comment) => {
-				const reply = comment.replies.find((reply) => reply.id === idToReply);
-				if (reply) {
-					console.log(reply);
-				}
-			});
-		}
+		const commentToReply = comments.find((comment) => comment.id === idToReply);
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
+		console.log(commentToReply);
+		dispatch(addReply({ id: idToReply, content }));
+		await setDoc(
+			docRef,
+			{
+				...commentToReply,
+				replies: [
+					{
+						content,
+						user: {
+							image: '',
+							username: '',
+						},
+
+					},
+				],
+			},
+			{ merge: true }
+		);
 	};
 };
