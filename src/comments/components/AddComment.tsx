@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { startNewComment } from '../../store/app/thunks';
-import { startLoadingComments } from '../../store';
+import { useAppDispatch, useAppSelector, startNewComment } from '../../store';
 export const AddComment = () => {
 	const dispatch = useAppDispatch();
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
@@ -21,7 +19,6 @@ export const AddComment = () => {
 				},
 			})
 		);
-		dispatch(startLoadingComments());
 	};
 	const onInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
 		setComment(e.target.value);

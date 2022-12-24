@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { FooterItem } from '.';
-import { useAppDispatch, editComment, startDeletingComment, startUpdatingComment } from '../../store';
+import { useAppDispatch, startDeletingComment, startUpdatingComment } from '../../store';
 export const CardFooter = ({ score, user, id, dbid }: { score: number; user?: boolean; id: number; dbid: string }) => {
 	const [counter, setCounter] = useState(score);
 	const dispatch = useAppDispatch();

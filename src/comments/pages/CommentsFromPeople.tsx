@@ -10,57 +10,36 @@ export const CommentsFromPeople = () => {
 			<LogoutButton />
 			{[...comments]
 				.sort((commentA, commentB) => commentA.id - commentB.id)
-				.map((comment) => (
-					<div key={comment.id}>
-						<CommentCardLayout key={comment.id} className='mainCommentCard'>
-							<CardHeader
-								img={
-									comment.user.username === currentUser.username ? currentUser.image!.toString() : comment.user.image
-								}
-								createdAt={comment.createdAt}
-								username={comment.user.username}
-								user={currentUser.username === comment.user.username}
-							/>
-							<CardContent content={comment.content} />
-							<CardFooter
-								score={comment.score}
-								user={currentUser.username === comment.user.username}
-								id={comment.id}
-								dbid={comment.dbid}
-							/>
-						</CommentCardLayout>
-						{comment.replies?.length !== 0 ? (
-							<>
-								{comment.replies.map((replie) =>
-									replie.user.username === currentUser.username ? (
-										<CommentCardLayout key={replie.id} className='replyCommentCard'>
-											<CardHeader
-												createdAt={replie.createdAt}
-												img={replie.user.image}
-												username={replie.user.username}
-												user
-											/>
-											<CardContent content={replie.content} />
-											<CardFooter score={replie.score} user id={replie.id} dbid={comment.dbid} />
-										</CommentCardLayout>
-									) : (
-										<CommentCardLayout key={replie.id} className='replyCommentCard'>
-											<CardHeader
-												createdAt={replie.createdAt}
-												img={replie.user.image}
-												username={replie.user.username}
-											/>
-											<CardContent content={replie.content} />
-											<CardFooter score={replie.score} id={replie.id} dbid={comment.dbid} />
-										</CommentCardLayout>
-									)
-								)}
-							</>
-						) : (
-							<></>
-						)}
-					</div>
-				))}
+				.map((comment) => {
+					const isUserComment = comment.user.username === currentUser.username;
+					return (
+						<div key={comment.id}>
+							<CommentCardLayout key={comment.id} className='mainCommentCard'>
+								<CardHeader
+									img={isUserComment ? currentUser.image!.toString() : comment.user.image}
+									createdAt={comment.createdAt}
+									username={comment.user.username}
+									isUserComment={isUserComment}
+								/>
+								<CardContent content={comment.content} />
+								<CardFooter score={comment.score} user={isUserComment} id={comment.id} dbid={comment.dbid} />
+							</CommentCardLayout>
+							{comment.replies?.length !== 0 &&
+								comment.replies.map((replie) => (
+									<CommentCardLayout key={replie.id} className='replyCommentCard'>
+										<CardHeader
+											createdAt={replie.createdAt}
+											img={replie.user.image}
+											username={replie.user.username}
+											isUserComment={isUserComment}
+										/>
+										<CardContent content={replie.content} />
+										<CardFooter score={replie.score} id={replie.id} dbid={comment.dbid} user={isUserComment} />
+									</CommentCardLayout>
+								))}
+						</div>
+					);
+				})}
 			<AddComment />
 		</>
 	);

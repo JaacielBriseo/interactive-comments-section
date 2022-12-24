@@ -1,14 +1,14 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { CommentsFromPeople } from '../pages';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { useEffect, useLayoutEffect } from 'react';
-import { startLoadingComments } from '../../store/auth/thunks';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { useAppDispatch, startLoadingComments, useAppSelector } from '../../store';
+import { CommentsFromPeople } from '../pages';
 
 export const CommentsRoutes = () => {
 	const dispatch = useAppDispatch();
 
 	useLayoutEffect(() => {
 		dispatch(startLoadingComments());
+		console.log('me renderie');
 	}, []);
 
 	return (

@@ -41,7 +41,7 @@ export interface CardHeaderProps {
 	img: string;
 	username: string;
 	createdAt: string;
-	user?: boolean;
+	isUserComment?: boolean;
 }
 export interface FooterItemProps {
 	icon: string;

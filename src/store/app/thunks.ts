@@ -2,8 +2,9 @@ import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
 import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { AuthSliceValues, CommentsSliceValues } from '../../types';
-import { deleteComment, editComment } from './commentsSlice';
+import { deleteComment, editComment, setComments } from './commentsSlice';
 import { RootState } from '../store';
+import { loadComments } from '../../helpers';
 interface NewCommentProps {
 	[x: string]: any;
 }
@@ -22,6 +23,8 @@ export const startNewComment = ({ content, createdAt, id, replies, score, user }
 		const newComment = { content, createdAt, id, replies, score, user };
 		const newDoc = doc(collection(FirebaseDB, `/comments`));
 		await setDoc(newDoc, newComment);
+		const comments = await loadComments();
+		dispatch(setComments(comments));
 	};
 };
 
