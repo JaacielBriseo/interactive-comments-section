@@ -1,55 +1,44 @@
 import { CommentCardLayout } from '../../layout';
 import { useAppSelector } from '../../store';
 import { AddComment, CardContent, CardFooter, CardHeader, LogoutButton } from '../components';
-import { useEffect } from 'react';
-import { loadNotes } from '../../helpers';
 
 export const CommentsFromPeople = () => {
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
-	useEffect(() => {
-		loadNotes();
-	}, []);
 
 	return (
 		<>
 			<LogoutButton />
 			{comments.map((comment) => (
 				<div key={comment.id}>
-					<CommentCardLayout className='mainCommentCard'>
+					<CommentCardLayout key={comment.id} className='mainCommentCard'>
 						<CardHeader
-							img={
-								comment.user.username === currentUser.username ? currentUser.image!.toString() : comment.user.image.png
-							}
+							img={comment.user.username === currentUser.username ? currentUser.image!.toString() : comment.user.image}
 							createdAt={comment.createdAt}
 							username={comment.user.username}
 							user={currentUser.username === comment.user.username}
 						/>
 						<CardContent content={comment.content} />
-						<CardFooter score={comment.score} user={currentUser.username === comment.user.username} id={comment.id} />
+						<CardFooter score={comment.score} user={currentUser.username === comment.user.username} id={comment.id} dbid={comment.dbid} />
 					</CommentCardLayout>
 					{comment.replies?.length !== 0 ? (
 						<>
 							{comment.replies.map((replie) =>
 								replie.user.username === currentUser.username ? (
-									<CommentCardLayout key={replie.createdAt} className='replyCommentCard'>
+									<CommentCardLayout key={replie.id} className='replyCommentCard'>
 										<CardHeader
 											createdAt={replie.createdAt}
-											img={replie.user.image.png}
+											img={replie.user.image}
 											username={replie.user.username}
 											user
 										/>
 										<CardContent content={replie.content} />
-										<CardFooter score={replie.score} user id={replie.id} />
+										<CardFooter score={replie.score} user id={replie.id}  dbid={comment.dbid}/>
 									</CommentCardLayout>
 								) : (
-									<CommentCardLayout key={replie.createdAt} className='replyCommentCard'>
-										<CardHeader
-											createdAt={replie.createdAt}
-											img={replie.user.image.png}
-											username={replie.user.username}
-										/>
+									<CommentCardLayout key={replie.id} className='replyCommentCard'>
+										<CardHeader createdAt={replie.createdAt} img={replie.user.image} username={replie.user.username} />
 										<CardContent content={replie.content} />
-										<CardFooter score={replie.score} />
+										<CardFooter score={replie.score} id={replie.id}  dbid={comment.dbid}/>
 									</CommentCardLayout>
 								)
 							)}

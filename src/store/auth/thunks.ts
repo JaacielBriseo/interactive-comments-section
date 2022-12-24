@@ -7,9 +7,8 @@ import {
 	registerUserWithEmailPassword,
 	signInWithGoogle,
 } from '../../firebase/providers';
-import { setUser } from '../app';
-import { RootState } from '../store';
-import { loadNotes } from '../../helpers';
+import { setComments, setUser } from '../app';
+import { loadComments } from '../../helpers';
 
 export const checkingAuth = () => {
 	return async (
@@ -111,9 +110,9 @@ export const startLoadingComments = () => {
 			undefined,
 			AnyAction
 		> &
-			Dispatch<AnyAction>,
-		getState: () => RootState
+			Dispatch<AnyAction>
 	) => {
-		await loadNotes()
+		const comments = await loadComments();
+		dispatch(setComments(comments));
 	};
 };

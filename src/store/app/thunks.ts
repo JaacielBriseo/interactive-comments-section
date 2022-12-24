@@ -1,8 +1,8 @@
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
-import { collection, doc, setDoc } from 'firebase/firestore/lite';
+import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
-import { CommentsSliceValues } from '../../types';
-import { addComment } from './commentsSlice';
+import { AuthSliceValues, CommentsSliceValues } from '../../types';
+import { deleteComment } from './commentsSlice';
 interface NewCommentProps {
 	[x: string]: any;
 }
@@ -11,6 +11,7 @@ export const startNewComment = ({ content, createdAt, id, replies, score, user }
 		dispatch: ThunkDispatch<
 			{
 				comments: CommentsSliceValues;
+				auth: AuthSliceValues;
 			},
 			undefined,
 			AnyAction
@@ -18,18 +19,27 @@ export const startNewComment = ({ content, createdAt, id, replies, score, user }
 			Dispatch<AnyAction>
 	) => {
 		const newComment = { content, createdAt, id, replies, score, user };
-		// dispatch(
-		// 	addComment({
-		// 		content,
-		// 		createdAt,
-		// 		id,
-		// 		replies,
-		// 		score,
-		// 		user,
-		// 	})
-		// );
 		const newDoc = doc(collection(FirebaseDB, `/comments`));
 		const setDocResp = await setDoc(newDoc, newComment);
 		console.log({ newDoc, setDocResp });
+	};
+};
+
+export const startDeletingComment = (id:number,dbid:string) => {
+	return async (
+		dispatch: ThunkDispatch<
+			{
+				comments: CommentsSliceValues;
+				auth: AuthSliceValues;
+			},
+			undefined,
+			AnyAction
+		> &
+			Dispatch<AnyAction>
+	) => {
+		const docRef = doc(FirebaseDB,`/comments/${dbid}`)
+		const resp = await deleteDoc(docRef)
+
+		dispatch(deleteComment(id))
 	};
 };

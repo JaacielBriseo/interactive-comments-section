@@ -1,1 +1,1 @@
-export * from './loadNotes';
+export * from './loadComments';

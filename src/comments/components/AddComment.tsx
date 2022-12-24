@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { addComment } from '../../store';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { startNewComment } from '../../store/app/thunks';
+import { startLoadingComments } from '../../store';
 export const AddComment = () => {
 	const dispatch = useAppDispatch();
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
@@ -21,6 +21,7 @@ export const AddComment = () => {
 				},
 			})
 		);
+		dispatch(startLoadingComments());
 	};
 	const onInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
 		setComment(e.target.value);
@@ -39,7 +40,7 @@ export const AddComment = () => {
 				></textarea>
 			</div>
 			<div className='flex justify-between items-center w-11/12'>
-				<img src={currentUser.image?.toString()} alt='' className='w-8 h-8' />
+				<img src={currentUser.image} alt='' className='w-8 h-8' />
 				<button type='submit' className='bg-Moderateblue w-24 h-12 rounded-lg text-White font-bold'>
 					SEND
 				</button>

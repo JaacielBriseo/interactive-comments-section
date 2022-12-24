@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { FooterItem } from '.';
-import { useAppDispatch, editComment, deleteComment } from '../../store';
-export const CardFooter = ({ score, user, id }: { score: number; user?: boolean; id?: number }) => {
+import { useAppDispatch, editComment, startDeletingComment } from '../../store';
+export const CardFooter = ({ score, user, id,dbid }: { score: number; user?: boolean; id: number,dbid:string }) => {
 	const [counter, setCounter] = useState(score);
 	const dispatch = useAppDispatch();
 	const alertDelete = () => {
@@ -16,7 +16,7 @@ export const CardFooter = ({ score, user, id }: { score: number; user?: boolean;
 		}).then((result) => {
 			if (result.isConfirmed) {
 				Swal.fire('Comment Deleted');
-				dispatch(deleteComment(id))
+				dispatch(startDeletingComment(id,dbid));
 			}
 		});
 	};

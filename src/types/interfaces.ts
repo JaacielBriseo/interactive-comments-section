@@ -11,6 +11,7 @@ export interface Comment {
 	content: string;
 	createdAt: string;
 	id: number;
+	dbid:string
 	replies: {
 		content: string;
 		createdAt: string;
@@ -18,24 +19,19 @@ export interface Comment {
 		replyingTo: string;
 		score: number;
 		user: {
-			image: {
-				png: string;
-				webp: string;
-			};
+			image: string;
 			username: string;
 		};
 	}[];
 	score: number;
 	user: {
-		image: {
-			png: string;
-			webp: string;
-		};
+		image: string;
 		username: string;
 	};
 }
 
-export interface CommentsSliceValues {
+export interface CommentsSliceValues { 
+	
 	comments: Comment[];
 	currentUser: {
 		[x: string]: any;

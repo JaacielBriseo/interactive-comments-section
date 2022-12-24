@@ -1,8 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { CommentsSliceValues } from '../../types';
-import data from '../../data/data.json';
 
-const initialValues: CommentsSliceValues = { ...data };
+const initialValues: CommentsSliceValues = {
+	comments: [
+		{
+			content: '',
+			createdAt: '',
+			id: 0,
+			replies: [],
+			score: 0,
+			user: {
+				image: '',
+				username: '',
+			},
+			dbid: '',
+		},
+	],
+	currentUser: {
+		username: '',
+		image: '',
+	},
+};
+
 export const commentsSlice = createSlice({
 	name: 'comments',
 	initialState: initialValues,
@@ -35,8 +54,11 @@ export const commentsSlice = createSlice({
 			state.currentUser.username = payload.username;
 			state.currentUser.image = payload.image;
 		},
+		setComments: (state, { payload }) => {
+			state.comments = payload;
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { addComment, editComment, deleteComment, setUser } = commentsSlice.actions;
+export const { addComment, editComment, deleteComment, setUser, setComments } = commentsSlice.actions;
