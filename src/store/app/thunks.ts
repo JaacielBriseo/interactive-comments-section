@@ -21,8 +21,7 @@ export const startNewComment = ({ content, createdAt, id, replies, score, user }
 	) => {
 		const newComment = { content, createdAt, id, replies, score, user };
 		const newDoc = doc(collection(FirebaseDB, `/comments`));
-		const setDocResp = await setDoc(newDoc, newComment);
-		console.log({ newDoc, setDocResp });
+		await setDoc(newDoc, newComment);
 	};
 };
 
