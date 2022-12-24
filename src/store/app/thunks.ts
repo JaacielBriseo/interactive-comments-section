@@ -3,6 +3,7 @@ import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { AuthSliceValues, CommentsSliceValues } from '../../types';
 import { deleteComment, editComment } from './commentsSlice';
+import { RootState } from '../store';
 interface NewCommentProps {
 	[x: string]: any;
 }
@@ -43,7 +44,7 @@ export const startDeletingComment = (id: number, dbid: string) => {
 		dispatch(deleteComment(id));
 	};
 };
-export const startUpdatingComment = (content: any, dbid: string, id: number) => {
+export const startUpdatingComment = (content: string, dbid: string, id: number) => {
 	return async (
 		dispatch: ThunkDispatch<
 			{
@@ -53,12 +54,13 @@ export const startUpdatingComment = (content: any, dbid: string, id: number) => 
 			undefined,
 			AnyAction
 		> &
-			Dispatch<AnyAction>
-	,getState:any) => {
-		const {comments} = getState().comments
-		const commentToUpdate = comments.find((comment:any)=> comment.dbid === dbid)
+			Dispatch<AnyAction>,
+		getState: () => RootState
+	) => {
+		const { comments } = getState().comments;
+		const commentToUpdate = comments.find((comment) => comment.dbid === dbid);
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
 		dispatch(editComment({ id, content }));
-		await setDoc(docRef, {...commentToUpdate,content}, { merge: true });
+		await setDoc(docRef, { ...commentToUpdate, content }, { merge: true });
 	};
 };
