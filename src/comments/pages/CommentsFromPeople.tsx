@@ -25,18 +25,20 @@ export const CommentsFromPeople = () => {
 								<CardFooter score={comment.score} user={isUserComment} id={comment.id} dbid={comment.dbid} />
 							</CommentCardLayout>
 							{comment.replies?.length !== 0 &&
-								comment.replies.map((replie) => (
-									<CommentCardLayout key={replie.id} className='replyCommentCard'>
-										<CardHeader
-											createdAt={replie.createdAt}
-											img={replie.user.image}
-											username={replie.user.username}
-											isUserComment={isUserComment}
-										/>
-										<CardContent content={replie.content} />
-										<CardFooter score={replie.score} id={replie.id} dbid={comment.dbid} user={isUserComment} />
-									</CommentCardLayout>
-								))}
+								comment.replies.map((replie) => {
+									return (
+										<CommentCardLayout key={replie.id} className='replyCommentCard'>
+											<CardHeader
+												createdAt={replie.createdAt}
+												img={replie.user.image}
+												username={replie.user.username}
+												isUserComment={isUserComment}
+											/>
+											<CardContent content={replie.content} />
+											<CardFooter score={replie.score} id={replie.id} dbid={comment.dbid} user={isUserComment} />
+										</CommentCardLayout>
+									);
+								})}
 						</div>
 					);
 				})}

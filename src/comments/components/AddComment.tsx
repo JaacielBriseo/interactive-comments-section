@@ -4,7 +4,7 @@ export const AddComment = () => {
 	const dispatch = useAppDispatch();
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
 	const [comment, setComment] = useState('');
-	const onSubmit = (e: React.SyntheticEvent) => {
+	const onAddComment = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		dispatch(
 			startNewComment({
@@ -24,7 +24,7 @@ export const AddComment = () => {
 		setComment(e.target.value);
 	};
 	return (
-		<form onSubmit={onSubmit} className='bg-White w-80 mx-auto p-3 rounded-lg space-y-4'>
+		<form onSubmit={onAddComment} className='bg-White w-80 mx-auto p-3 rounded-lg space-y-4'>
 			<div className='flex justify-center'>
 				<textarea
 					name='comment'

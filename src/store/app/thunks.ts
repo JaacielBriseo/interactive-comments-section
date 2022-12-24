@@ -1,13 +1,11 @@
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
 import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
-import { AuthSliceValues, CommentsSliceValues } from '../../types';
-import { deleteComment, editComment, setComments } from './commentsSlice';
 import { RootState } from '../store';
 import { loadComments } from '../../helpers';
-interface NewCommentProps {
-	[x: string]: any;
-}
+import { AuthSliceValues, CommentsSliceValues, NewCommentProps } from '../../types';
+import { deleteComment, editComment, setComments } from '.';
+
 export const startNewComment = ({ content, createdAt, id, replies, score, user }: NewCommentProps) => {
 	return async (
 		dispatch: ThunkDispatch<
@@ -64,5 +62,34 @@ export const startUpdatingComment = (content: string, dbid: string, id: number) 
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
 		dispatch(editComment({ id, content }));
 		await setDoc(docRef, { ...commentToUpdate, content }, { merge: true });
+	};
+};
+
+export const startCreatingReply = (dbid: string, idToReply: number, content: string) => {
+	return async (
+		dispatch: ThunkDispatch<
+			{
+				comments: CommentsSliceValues;
+				auth: AuthSliceValues;
+			},
+			undefined,
+			AnyAction
+		> &
+			Dispatch<AnyAction>,
+		getState: () => RootState
+	) => {
+		const { comments } = getState().comments;
+		const comment = comments.find((comment) => comment.id === idToReply);
+		if (comment) {
+		console.log(comment);
+		} else {
+			comments.forEach((comment) => {
+				const reply = comment.replies.find((reply) => reply.id === idToReply);
+				if (reply) {
+					console.log(reply);
+				}
+			});
+		}
+		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
 	};
 };

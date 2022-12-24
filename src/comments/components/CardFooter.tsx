@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { FooterItem } from '.';
-import { useAppDispatch, startDeletingComment, startUpdatingComment } from '../../store';
+import { useAppDispatch, startDeletingComment, startUpdatingComment, startCreatingReply, addReply } from '../../store';
 export const CardFooter = ({ score, user, id, dbid }: { score: number; user?: boolean; id: number; dbid: string }) => {
 	const [counter, setCounter] = useState(score);
 	const dispatch = useAppDispatch();
-	const alertDelete = () => {
+
+	const onDelete = () => {
 		Swal.fire({
 			title: 'Delete Comment',
 			text: 'Are you sure you want to delete this comment? This will remove the comment and cannot be undo',
@@ -20,7 +21,8 @@ export const CardFooter = ({ score, user, id, dbid }: { score: number; user?: bo
 			}
 		});
 	};
-	const handleEditComment = () => {
+
+	const onEditComment = () => {
 		Swal.fire({
 			input: 'textarea',
 			inputLabel: 'Message',
@@ -38,7 +40,19 @@ export const CardFooter = ({ score, user, id, dbid }: { score: number; user?: bo
 	const minusClick = () => {
 		setCounter(counter - 1);
 	};
-
+	const onReply = () => {
+		Swal.fire({
+			input: 'textarea',
+			inputLabel: 'Reply',
+			inputPlaceholder: 'Type your reply here...',
+			showCancelButton: true,
+		}).then((result) => {
+			if (!result.isConfirmed || result.value === '') return;
+			const reply = result.value;
+			dispatch(startCreatingReply(dbid, id, reply));
+			dispatch(addReply({ id, content: reply }));
+		});
+	};
 	return (
 		<div className='flex justify-between '>
 			<div className='flex items-center p-1 justify-between bg-VeryLightGray w-20 h-8'>
@@ -48,11 +62,11 @@ export const CardFooter = ({ score, user, id, dbid }: { score: number; user?: bo
 			</div>
 			{user ? (
 				<div className='flex items-center space-x-2'>
-					<FooterItem function={alertDelete} icon='icon-delete' color='text-SoftRed' text='Delete' />
-					<FooterItem function={handleEditComment} icon='icon-edit' color='text-Moderateblue' text='Edit' />
+					<FooterItem function={onDelete} icon='icon-delete' color='text-SoftRed' text='Delete' />
+					<FooterItem function={onEditComment} icon='icon-edit' color='text-Moderateblue' text='Edit' />
 				</div>
 			) : (
-				<FooterItem color='text-Moderateblue' icon='icon-reply' text='Reply' />
+				<FooterItem function={onReply} color='text-Moderateblue' icon='icon-reply' text='Reply' />
 			)}
 		</div>
 	);

@@ -29,6 +29,40 @@ export const commentsSlice = createSlice({
 		addComment: (state: CommentsSliceValues, { payload }) => {
 			state.comments.push(payload);
 		},
+		addReply: (state: CommentsSliceValues, { payload }) => {
+			const { id, content } = payload;
+			const comment = state.comments.find((comment) => comment.id === id);
+			if (comment) {
+				comment.replies.push({
+					content,
+					createdAt: '1 minute ago',
+					id,
+					replyingTo: '',
+					score: 0,
+					user: {
+						image: '',
+						username: '',
+					},
+				});
+			} else {
+				state.comments.forEach((comment) => {
+					const reply = comment.replies.find((reply) => reply.id === id);
+					if (reply) {
+						reply.replies?.push({
+							content,
+							createdAt: '1 minute ago',
+							id,
+							replyingTo: '',
+							score: 0,
+							user: {
+								image: '',
+								username: '',
+							},
+						});
+					}
+				});
+			}
+		},
 		editComment: (state: CommentsSliceValues, { payload }) => {
 			const { id, content } = payload;
 			const comment = state.comments.find((comment) => comment.id === id);
@@ -61,4 +95,4 @@ export const commentsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addComment, editComment, deleteComment, setUser, setComments } = commentsSlice.actions;
+export const { addComment, addReply, editComment, deleteComment, setUser, setComments } = commentsSlice.actions;

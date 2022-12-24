@@ -11,13 +11,16 @@ export interface Comment {
 	content: string;
 	createdAt: string;
 	id: number;
-	dbid:string
+	dbid: string;
 	replies: {
 		content: string;
 		createdAt: string;
 		id: number;
 		replyingTo: string;
 		score: number;
+		replies?: {
+			[x: string]: any;
+		};
 		user: {
 			image: string;
 			username: string;
@@ -30,8 +33,7 @@ export interface Comment {
 	};
 }
 
-export interface CommentsSliceValues { 
-	
+export interface CommentsSliceValues {
 	comments: Comment[];
 	currentUser: {
 		[x: string]: any;
@@ -53,4 +55,15 @@ export interface CreatingUserProps {
 	email: string;
 	password: string;
 	displayName: string;
+}
+export interface NewCommentProps {
+	content: string;
+	createdAt: number;
+	id: number;
+	replies: [];
+	score: number;
+	user: {
+		image: string;
+		username: string;
+	};
 }

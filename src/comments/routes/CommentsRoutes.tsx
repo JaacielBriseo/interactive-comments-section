@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { useAppDispatch, startLoadingComments, useAppSelector } from '../../store';
+import { useAppDispatch, startLoadingComments } from '../../store';
 import { CommentsFromPeople } from '../pages';
 
 export const CommentsRoutes = () => {
@@ -8,7 +8,6 @@ export const CommentsRoutes = () => {
 
 	useLayoutEffect(() => {
 		dispatch(startLoadingComments());
-		console.log('me renderie');
 	}, []);
 
 	return (
