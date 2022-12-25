@@ -9,7 +9,7 @@ interface CardFooterProps {
 }
 export const CardFooter = ({ score, isUser, id, dbid, isReply }: CardFooterProps) => {
 	const { minusClick, plusClick, counter } = useLikesCounter(score);
-	const { onEditComment } = useEditComment({ id, dbid });
+	const { onEditComment } = useEditComment({ id, dbid ,isReply });
 	const { onDelete } = useDelete({ isReply, id, dbid });
 	const { onReply } = useReply({ dbid, id });
 	return (

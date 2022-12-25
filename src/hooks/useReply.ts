@@ -13,8 +13,8 @@ export const useReply = ({ dbid, id }: { dbid: string; id: string }) => {
 		}).then((result) => {
 			if (!result.isConfirmed || result.value === '') return;
 			const reply = result.value;
-			dispatch(startCreatingReply(dbid, id, reply));
+			dispatch(startCreatingReply(dbid, reply));
 		});
 	};
-	return {onReply};
+	return { onReply };
 };

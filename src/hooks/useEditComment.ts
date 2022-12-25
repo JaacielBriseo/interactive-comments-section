@@ -4,8 +4,9 @@ import { useAppDispatch } from '../store/hooks';
 interface EditCommentProps {
 	dbid: string;
 	id: string;
+	isReply:boolean
 }
-export const useEditComment = ({ dbid, id }: EditCommentProps) => {
+export const useEditComment = ({ dbid, id , isReply }: EditCommentProps) => {
 	const dispatch = useAppDispatch();
 	const onEditComment = () => {
 		Swal.fire({
@@ -16,7 +17,7 @@ export const useEditComment = ({ dbid, id }: EditCommentProps) => {
 		}).then((result) => {
 			if (!result.isConfirmed || result.value === '') return;
 			const content = result.value;
-			dispatch(startUpdatingComment(content, dbid, id));
+			dispatch(startUpdatingComment(content, dbid, id,isReply));
 		});
 	};
 	return {onEditComment};

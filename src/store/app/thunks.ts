@@ -1,22 +1,25 @@
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
-import { arrayUnion, collection, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore/lite';
+import {
+	arrayUnion,
+	collection,
+	deleteDoc,
+	doc,
+	DocumentData,
+	DocumentSnapshot,
+	getDoc,
+	setDoc,
+	updateDoc,
+} from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { RootState } from '../store';
 import { loadComments } from '../../helpers';
-import { AuthSliceValues, CommentsSliceValues, NewCommentProps } from '../../types';
-import { addReply, deleteComment, editComment, setComments } from '.';
+import { CommentsSliceValues, NewCommentProps } from '../../types';
+import { addReply, deleteComment, setComments } from '.';
 import { v4 as uuidv4 } from 'uuid';
+
 export const startNewComment = ({ content, createdAt, id, replies, score, user }: NewCommentProps) => {
 	return async (
-		dispatch: ThunkDispatch<
-			{
-				comments: CommentsSliceValues;
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>
+		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>
 	) => {
 		const newComment = { content, createdAt, id, replies, score, user };
 		const newDoc = doc(collection(FirebaseDB, `/comments`));
@@ -28,15 +31,7 @@ export const startNewComment = ({ content, createdAt, id, replies, score, user }
 
 export const startDeletingComment = (id: string, dbid: string, isReply: boolean) => {
 	return async (
-		dispatch: ThunkDispatch<
-			{
-				comments: CommentsSliceValues;
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>,
+		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>,
 		getState: () => RootState
 	) => {
 		const { comments } = getState().comments;
@@ -44,75 +39,62 @@ export const startDeletingComment = (id: string, dbid: string, isReply: boolean)
 		if (!isReply) {
 			await deleteDoc(docRef);
 			dispatch(deleteComment(id));
-			const comments = await loadComments();
-			dispatch(setComments(comments));
 		} else {
 			comments.forEach(async (comment) => {
 				const newReplies = comment.replies.filter((reply) => reply.id !== id);
 				await updateDoc(docRef, { replies: newReplies });
 			});
-			const newComments = await loadComments();
-			dispatch(setComments(newComments));
 		}
+		const newComments = await loadComments();
+		dispatch(setComments(newComments));
 	};
 };
-export const startUpdatingComment = (content: string, dbid: string, id: string) => {
+export const startUpdatingComment = (content: string, dbid: string, id: string, isReply: boolean) => {
 	return async (
-		dispatch: ThunkDispatch<
-			{
-				comments: CommentsSliceValues;
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>,
+		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>,
 		getState: () => RootState
 	) => {
 		const { comments } = getState().comments;
-		const commentToUpdate = comments.find((comment) => comment.dbid === dbid);
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
-		dispatch(editComment({ id, content }));
-		await setDoc(docRef, { ...commentToUpdate, content }, { merge: true });
+		const commentToUpdate = comments.find((comment) => comment.dbid === dbid);
+		const repliesSnapshot: DocumentSnapshot<DocumentData> = await getDoc(docRef);
+		const replies: { id: string; content: string }[] = repliesSnapshot.data()?.replies;
+		const updatedReplies = replies.map((reply) => {
+			if (reply.id === id) {
+				return { ...reply, content };
+			}
+			return reply;
+		});
+		if (!isReply) {
+			await setDoc(docRef, { ...commentToUpdate, content }, { merge: true });
+		} else {
+			await updateDoc(docRef, { replies: updatedReplies });
+		}
+		const newComments = await loadComments();
+		dispatch(setComments(newComments));
 	};
 };
 
-export const startCreatingReply = (dbid: string, idToReply: string, content: string) => {
+export const startCreatingReply = (dbid: string, content: string) => {
 	return async (
-		dispatch: ThunkDispatch<
-			{
-				comments: CommentsSliceValues;
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>,
+		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>,
 		getState: () => RootState
 	) => {
 		const { currentUser } = getState().comments;
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
-		dispatch(
-			addReply({
-				content,
-				createdAt: new Date().toString(),
-				id: uuidv4(),
-				replyingTo: '',
-				score: 0,
-				user: currentUser,
-			})
-		);
+		const reply = {
+			content,
+			createdAt: new Date().toString(),
+			id: uuidv4(),
+			replyingTo: '',
+			score: 0,
+			user: currentUser,
+		};
+		dispatch(addReply(reply));
 		await updateDoc(docRef, {
-			replies: arrayUnion({
-				content,
-				createdAt: new Date().toString(),
-				id: uuidv4(),
-				replyingTo: '',
-				score: 0,
-				user: currentUser,
-			}),
+			replies: arrayUnion(reply),
 		});
-		const comments = await loadComments()
-		dispatch(setComments(comments))
+		const comments = await loadComments();
+		dispatch(setComments(comments));
 	};
 };
