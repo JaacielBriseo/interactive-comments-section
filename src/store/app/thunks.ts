@@ -1,15 +1,5 @@
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
-import {
-	arrayUnion,
-	collection,
-	deleteDoc,
-	doc,
-	setDoc,
-	updateDoc,
-	deleteField,
-	FieldValue,
-	arrayRemove,
-} from 'firebase/firestore/lite';
+import { arrayUnion, collection, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { RootState } from '../store';
 import { loadComments } from '../../helpers';
@@ -54,11 +44,15 @@ export const startDeletingComment = (id: string, dbid: string, isReply: boolean)
 		if (!isReply) {
 			await deleteDoc(docRef);
 			dispatch(deleteComment(id));
+			const comments = await loadComments();
+			dispatch(setComments(comments));
 		} else {
 			comments.forEach(async (comment) => {
 				const newReplies = comment.replies.filter((reply) => reply.id !== id);
 				await updateDoc(docRef, { replies: newReplies });
 			});
+			const newComments = await loadComments();
+			dispatch(setComments(newComments));
 		}
 	};
 };
@@ -98,14 +92,27 @@ export const startCreatingReply = (dbid: string, idToReply: string, content: str
 	) => {
 		const { currentUser } = getState().comments;
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
-		dispatch(addReply({ id: idToReply, content }));
+		dispatch(
+			addReply({
+				content,
+				createdAt: new Date().toString(),
+				id: uuidv4(),
+				replyingTo: '',
+				score: 0,
+				user: currentUser,
+			})
+		);
 		await updateDoc(docRef, {
 			replies: arrayUnion({
 				content,
-				createdAt: new Date().getDate(),
-				user: currentUser,
+				createdAt: new Date().toString(),
 				id: uuidv4(),
+				replyingTo: '',
+				score: 0,
+				user: currentUser,
 			}),
 		});
+		const comments = await loadComments()
+		dispatch(setComments(comments))
 	};
 };

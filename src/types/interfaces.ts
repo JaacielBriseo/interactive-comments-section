@@ -39,8 +39,11 @@ export interface CommentsSliceValues {
 	currentUser: {
 		username: string;
 		image: string;
-	}; 
+	};
 }
+type EmptyObject = {};
+
+export type CommentsSlice = EmptyObject | CommentsSliceValues;
 export interface CardHeaderProps {
 	img: string;
 	username: string;

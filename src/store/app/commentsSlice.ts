@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { CommentsSliceValues } from '../../types';
-import { v4 as uuidv4 } from 'uuid';
 const initialValues: CommentsSliceValues = {
 	comments: [
 		{
@@ -30,34 +29,21 @@ export const commentsSlice = createSlice({
 		addComment: (state: CommentsSliceValues, { payload }) => {
 			state.comments.push(payload);
 		},
+
 		addReply: (state: CommentsSliceValues, { payload }) => {
-			const { id, content } = payload;
-			const comment = state.comments.find((comment) => comment.id === id);
+			const comment = state.comments.find((comment) => comment.id === payload.id);
 			if (comment) {
-				comment.replies.push({
-					content,
-					createdAt: new Date().toString(),
-					id: uuidv4(),
-					replyingTo: '',
-					score: 0,
-					user: state.currentUser,
-				});
+				comment.replies.push(payload);
 			} else {
 				state.comments.forEach((comment) => {
-					const reply = comment.replies.find((reply) => reply.id === id);
+					const reply = comment.replies.find((reply) => reply.id === payload.id);
 					if (reply) {
-						reply.replies?.push({
-							content,
-							createdAt: new Date().getDate(),
-							id: uuidv4(),
-							replyingTo: '',
-							score: 0,
-							user: state.currentUser,
-						});
+						reply.replies?.push(payload);
 					}
 				});
 			}
 		},
+
 		editComment: (state: CommentsSliceValues, { payload }) => {
 			const { id, content } = payload;
 			const comment = state.comments.find((comment) => comment.id === id);
@@ -72,6 +58,7 @@ export const commentsSlice = createSlice({
 				});
 			}
 		},
+
 		deleteComment: (state: CommentsSliceValues, { payload }) => {
 			const id = payload;
 			state.comments = state.comments.filter((comment) => comment.id !== id);
@@ -79,10 +66,12 @@ export const commentsSlice = createSlice({
 				comment.replies = comment.replies.filter((reply) => reply.id !== id);
 			});
 		},
+
 		setUser: (state: CommentsSliceValues, { payload }) => {
 			state.currentUser.username = payload.username;
 			state.currentUser.image = payload.image;
 		},
+
 		setComments: (state, { payload }) => {
 			state.comments = payload;
 		},

@@ -1,30 +1,7 @@
-import { useState } from 'react';
-import { useAppDispatch, useAppSelector, startNewComment } from '../../store';
-import { v4 as uuidv4 } from 'uuid';
+import { useAddComment } from '../../hooks';
+
 export const AddComment = () => {
-	const dispatch = useAppDispatch();
-	const { comments, currentUser } = useAppSelector((state) => state.comments);
-	const [comment, setComment] = useState('');
-	const onAddComment = (e: React.SyntheticEvent) => {
-		e.preventDefault();
-		dispatch(
-			startNewComment({
-				content: comment,
-				createdAt: new Date().toString(),
-				timestamp: new Date().getTime(),
-				id: uuidv4(),
-				replies: [],
-				score: 0,
-				user: {
-					image: currentUser.image,
-					username: currentUser.username,
-				},
-			})
-		);
-	};
-	const onInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-		setComment(e.target.value);
-	};
+	const { comment, currentUser, onAddComment, onInputChange } = useAddComment();
 	return (
 		<form onSubmit={onAddComment} className='bg-White w-80 mx-auto p-3 rounded-lg space-y-4'>
 			<div className='flex justify-center'>
