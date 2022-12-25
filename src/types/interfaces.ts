@@ -1,4 +1,4 @@
-import { EmptyStatement } from "typescript";
+import { EmptyStatement } from 'typescript';
 
 export interface AuthSliceValues {
 	status: 'checking' | 'authenticated' | 'not-authenticated';
@@ -42,6 +42,7 @@ export interface CommentsSliceValues {
 		username: string;
 		image: string;
 	};
+	isMobileMenuOpen: boolean;
 }
 type EmptyArray = [];
 

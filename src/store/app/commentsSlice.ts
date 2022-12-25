@@ -20,12 +20,16 @@ const initialValues: CommentsSliceValues = {
 		username: '',
 		image: '',
 	},
+	isMobileMenuOpen: false,
 };
 
 export const commentsSlice = createSlice({
 	name: 'comments',
 	initialState: initialValues,
 	reducers: {
+		toggleMobileMenu: (state: CommentsSliceValues) => {
+			state.isMobileMenuOpen = !state.isMobileMenuOpen;
+		},
 		addComment: (state: CommentsSliceValues, { payload }) => {
 			state.comments.push(payload);
 		},
@@ -79,4 +83,4 @@ export const commentsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addComment, addReply, editComment, deleteComment, setUser, setComments } = commentsSlice.actions;
+export const { addComment, addReply, editComment, deleteComment, setUser, setComments ,toggleMobileMenu} = commentsSlice.actions;

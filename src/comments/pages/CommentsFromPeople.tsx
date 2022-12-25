@@ -1,12 +1,13 @@
 import { CommentCardLayout } from '../../layout';
 import { useAppSelector } from '../../store';
-import { AddComment, CardContent, CardFooter, CardHeader, LogoutButton } from '../components';
+import { AddComment, CardContent, CardFooter, CardHeader, HamburgerButton, LogoutButton, Menu } from '../components';
 
 export const CommentsFromPeople = () => {
-	const { comments, currentUser } = useAppSelector((state) => state.comments);
+	const { comments, currentUser,isMobileMenuOpen } = useAppSelector((state) => state.comments);
 	return (
 		<>
-			<LogoutButton />
+			<HamburgerButton/>
+			{isMobileMenuOpen && <Menu/>}
 			{[...comments]
 				.sort((commentA, commentB) => commentA.timestamp - commentB.timestamp)
 				.map((comment) => {
