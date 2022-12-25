@@ -1,10 +1,10 @@
-import { useAppDispatch } from '../../store/hooks';
-import { startLogout } from '../../store/auth/thunks';
+import { useAppDispatch, startLogout } from '../../store';
+
 export const LogoutButton = () => {
-    const dispatch = useAppDispatch()
+	const dispatch = useAppDispatch();
 	const onLogout = () => {
-        dispatch(startLogout())
-    };
+		dispatch(startLogout());
+	};
 	return (
 		<button
 			onClick={onLogout}
