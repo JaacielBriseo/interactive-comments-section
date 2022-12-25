@@ -38,7 +38,6 @@ export const startLoginWithEmail = ({ email, password }: { email: string; passwo
 	) => {
 		dispatch(checkingCredentials());
 		const result = await loginWithEmailPassword({ email, password });
-		console.log(result);
 		if (!result.ok) return dispatch(logout(result.errorMessage));
 		dispatch(login(result));
 		dispatch(setUser({ username: result.displayName, image: result.photoURL }));

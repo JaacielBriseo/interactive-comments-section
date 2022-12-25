@@ -10,12 +10,13 @@ export interface AuthSliceValues {
 export interface Comment {
 	content: string;
 	createdAt: string;
-	id: number;
+	timestamp: number;
+	id: string;
 	dbid: string;
 	replies: {
 		content: string;
 		createdAt: string;
-		id: number;
+		id: string;
 		replyingTo: string;
 		score: number;
 		replies?: {
@@ -36,8 +37,9 @@ export interface Comment {
 export interface CommentsSliceValues {
 	comments: Comment[];
 	currentUser: {
-		[x: string]: any;
-	};
+		username: string;
+		image: string;
+	}; 
 }
 export interface CardHeaderProps {
 	img: string;
@@ -58,8 +60,9 @@ export interface CreatingUserProps {
 }
 export interface NewCommentProps {
 	content: string;
-	createdAt: number;
-	id: number;
+	createdAt: string;
+	timestamp: number;
+	id: string;
 	replies: [];
 	score: number;
 	user: {

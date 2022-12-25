@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector, startNewComment } from '../../store';
+import { v4 as uuidv4 } from 'uuid';
 export const AddComment = () => {
 	const dispatch = useAppDispatch();
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
@@ -9,8 +10,9 @@ export const AddComment = () => {
 		dispatch(
 			startNewComment({
 				content: comment,
-				createdAt: new Date().getDate(),
-				id: comments.length + 1,
+				createdAt: new Date().toString(),
+				timestamp: new Date().getTime(),
+				id: uuidv4(),
 				replies: [],
 				score: 0,
 				user: {

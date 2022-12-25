@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { CommentsSliceValues } from '../../types';
-
+import { v4 as uuidv4 } from 'uuid';
 const initialValues: CommentsSliceValues = {
 	comments: [
 		{
 			content: '',
 			createdAt: '',
-			id: 0,
+			timestamp: 0,
+			id: '',
 			replies: [],
 			score: 0,
 			user: {
@@ -35,14 +36,11 @@ export const commentsSlice = createSlice({
 			if (comment) {
 				comment.replies.push({
 					content,
-					createdAt: '1 minute ago',
-					id,
+					createdAt: new Date().toString(),
+					id: uuidv4(),
 					replyingTo: '',
 					score: 0,
-					user: {
-						image: '',
-						username: '',
-					},
+					user: state.currentUser,
 				});
 			} else {
 				state.comments.forEach((comment) => {
@@ -50,14 +48,11 @@ export const commentsSlice = createSlice({
 					if (reply) {
 						reply.replies?.push({
 							content,
-							createdAt: '1 minute ago',
-							id,
+							createdAt: new Date().getDate(),
+							id: uuidv4(),
 							replyingTo: '',
 							score: 0,
-							user: {
-								image: '',
-								username: '',
-							},
+							user: state.currentUser,
 						});
 					}
 				});

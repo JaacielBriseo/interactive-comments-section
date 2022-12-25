@@ -1,11 +1,11 @@
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
-import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
+import { arrayUnion, collection, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { RootState } from '../store';
 import { loadComments } from '../../helpers';
 import { AuthSliceValues, CommentsSliceValues, NewCommentProps } from '../../types';
 import { addReply, deleteComment, editComment, setComments } from '.';
-
+import { v4 as uuidv4 } from 'uuid';
 export const startNewComment = ({ content, createdAt, id, replies, score, user }: NewCommentProps) => {
 	return async (
 		dispatch: ThunkDispatch<
@@ -26,7 +26,7 @@ export const startNewComment = ({ content, createdAt, id, replies, score, user }
 	};
 };
 
-export const startDeletingComment = (id: number, dbid: string) => {
+export const startDeletingComment = (id: string, dbid: string) => {
 	return async (
 		dispatch: ThunkDispatch<
 			{
@@ -40,11 +40,10 @@ export const startDeletingComment = (id: number, dbid: string) => {
 	) => {
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
 		await deleteDoc(docRef);
-
 		dispatch(deleteComment(id));
 	};
 };
-export const startUpdatingComment = (content: string, dbid: string, id: number) => {
+export const startUpdatingComment = (content: string, dbid: string, id: string) => {
 	return async (
 		dispatch: ThunkDispatch<
 			{
@@ -65,7 +64,7 @@ export const startUpdatingComment = (content: string, dbid: string, id: number) 
 	};
 };
 
-export const startCreatingReply = (dbid: string, idToReply: number, content: string) => {
+export const startCreatingReply = (dbid: string, idToReply: string, content: string) => {
 	return async (
 		dispatch: ThunkDispatch<
 			{
@@ -78,27 +77,16 @@ export const startCreatingReply = (dbid: string, idToReply: number, content: str
 			Dispatch<AnyAction>,
 		getState: () => RootState
 	) => {
-		const { comments } = getState().comments;
-		const commentToReply = comments.find((comment) => comment.id === idToReply);
+		const { currentUser } = getState().comments;
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
-		console.log(commentToReply);
 		dispatch(addReply({ id: idToReply, content }));
-		await setDoc(
-			docRef,
-			{
-				...commentToReply,
-				replies: [
-					{
-						content,
-						user: {
-							image: '',
-							username: '',
-						},
-
-					},
-				],
-			},
-			{ merge: true }
-		);
+		await updateDoc(docRef, {
+			replies: arrayUnion({
+				content,
+				createdAt: new Date().getDate(),
+				user: currentUser,
+				id: uuidv4(),
+			})
+		});
 	};
 };

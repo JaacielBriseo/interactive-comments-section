@@ -1,58 +1,13 @@
-import { useState } from 'react';
-import Swal from 'sweetalert2';
 import { FooterItem } from '.';
-import { useAppDispatch, startDeletingComment, startUpdatingComment, startCreatingReply, addReply } from '../../store';
-export const CardFooter = ({ score, user, id, dbid }: { score: number; user?: boolean; id: number; dbid: string }) => {
-	const [counter, setCounter] = useState(score);
-	const dispatch = useAppDispatch();
-
-	const onDelete = () => {
-		Swal.fire({
-			title: 'Delete Comment',
-			text: 'Are you sure you want to delete this comment? This will remove the comment and cannot be undo',
-			icon: 'warning',
-			showDenyButton: true,
-			confirmButtonText: 'Yes, Delete',
-			denyButtonText: `Cancel`,
-		}).then((result) => {
-			if (result.isConfirmed) {
-				Swal.fire('Comment Deleted');
-				dispatch(startDeletingComment(id, dbid));
-			}
-		});
-	};
-
-	const onEditComment = () => {
-		Swal.fire({
-			input: 'textarea',
-			inputLabel: 'Message',
-			inputPlaceholder: 'Type your message here...',
-			showCancelButton: true,
-		}).then((result) => {
-			if (!result.isConfirmed || result.value === '') return;
-			const content = result.value;
-			dispatch(startUpdatingComment(content, dbid, id));
-		});
-	};
-	const plusClick = () => {
-		setCounter(counter + 1);
-	};
-	const minusClick = () => {
-		setCounter(counter - 1);
-	};
-	const onReply = () => {
-		Swal.fire({
-			input: 'textarea',
-			inputLabel: 'Reply',
-			inputPlaceholder: 'Type your reply here...',
-			showCancelButton: true,
-		}).then((result) => {
-			if (!result.isConfirmed || result.value === '') return;
-			const reply = result.value;
-			dispatch(startCreatingReply(dbid, id, reply));
-			
-		});
-	};
+import { useCrudActions } from '../../hooks/useCrudActions';
+interface CardFooterProps {
+	score: number;
+	isUser?: boolean;
+	id: string;
+	dbid: string;
+}
+export const CardFooter = ({ score, isUser, id, dbid }: CardFooterProps) => {
+	const { minusClick, onDelete, onEditComment, onReply, plusClick, counter } = useCrudActions({ score, id, dbid });
 	return (
 		<div className='flex justify-between '>
 			<div className='flex items-center p-1 justify-between bg-VeryLightGray w-20 h-8'>
@@ -60,7 +15,7 @@ export const CardFooter = ({ score, user, id, dbid }: { score: number; user?: bo
 				<p className='text-Moderateblue font-medium'>{counter}</p>
 				<FooterItem icon='icon-minus' function={minusClick} />
 			</div>
-			{user ? (
+			{isUser ? (
 				<div className='flex items-center space-x-2'>
 					<FooterItem function={onDelete} icon='icon-delete' color='text-SoftRed' text='Delete' />
 					<FooterItem function={onEditComment} icon='icon-edit' color='text-Moderateblue' text='Edit' />
