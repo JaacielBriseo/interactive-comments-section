@@ -22,7 +22,7 @@ export const CommentsFromPeople = () => {
 									isUserComment={isUserComment}
 								/>
 								<CardContent content={comment.content} />
-								<CardFooter score={comment.score} isUser={isUserComment} id={comment.id} dbid={comment.dbid} />
+								<CardFooter score={comment.score} isUser={isUserComment} id={comment.id} dbid={comment.dbid} isReply={false}/>
 							</CommentCardLayout>
 							{comment.replies?.length !== 0 &&
 								comment.replies.map((replie) => {
@@ -36,7 +36,7 @@ export const CommentsFromPeople = () => {
 												isUserComment={isUserReply}
 											/>
 											<CardContent content={replie.content} />
-											<CardFooter score={replie.score} id={replie.id} dbid={comment.dbid} isUser={isUserReply} />
+											<CardFooter score={replie.score} id={replie.id} dbid={comment.dbid} isUser={isUserReply} isReply/>
 										</CommentCardLayout>
 									);
 								})}

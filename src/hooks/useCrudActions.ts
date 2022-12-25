@@ -6,8 +6,9 @@ interface CrudProps {
 	score: number;
 	id: string;
 	dbid: string;
+	isReply: boolean;
 }
-export const useCrudActions = ( {score, id, dbid }: CrudProps) => {
+export const useCrudActions = ({ score, id, dbid, isReply }: CrudProps) => {
 	const [counter, setCounter] = useState(score);
 	const dispatch = useAppDispatch();
 
@@ -22,7 +23,7 @@ export const useCrudActions = ( {score, id, dbid }: CrudProps) => {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				Swal.fire('Comment Deleted');
-				dispatch(startDeletingComment(id, dbid));
+				dispatch(startDeletingComment(id, dbid, isReply));
 			}
 		});
 	};
@@ -63,6 +64,6 @@ export const useCrudActions = ( {score, id, dbid }: CrudProps) => {
 		onReply,
 		onDelete,
 		onEditComment,
-        counter
+		counter,
 	};
 };

@@ -1,5 +1,15 @@
 import { AnyAction, Dispatch, ThunkDispatch } from '@reduxjs/toolkit';
-import { arrayUnion, collection, deleteDoc, doc, setDoc, updateDoc } from 'firebase/firestore/lite';
+import {
+	arrayUnion,
+	collection,
+	deleteDoc,
+	doc,
+	setDoc,
+	updateDoc,
+	deleteField,
+	FieldValue,
+	arrayRemove,
+} from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase/config';
 import { RootState } from '../store';
 import { loadComments } from '../../helpers';
@@ -26,7 +36,7 @@ export const startNewComment = ({ content, createdAt, id, replies, score, user }
 	};
 };
 
-export const startDeletingComment = (id: string, dbid: string) => {
+export const startDeletingComment = (id: string, dbid: string, isReply: boolean) => {
 	return async (
 		dispatch: ThunkDispatch<
 			{
@@ -36,11 +46,20 @@ export const startDeletingComment = (id: string, dbid: string) => {
 			undefined,
 			AnyAction
 		> &
-			Dispatch<AnyAction>
+			Dispatch<AnyAction>,
+		getState: () => RootState
 	) => {
+		const { comments } = getState().comments;
 		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
-		await deleteDoc(docRef);
-		dispatch(deleteComment(id));
+		if (!isReply) {
+			await deleteDoc(docRef);
+			dispatch(deleteComment(id));
+		} else {
+			comments.forEach(async (comment) => {
+				const newReplies = comment.replies.filter((reply) => reply.id !== id);
+				await updateDoc(docRef, { replies: newReplies });
+			});
+		}
 	};
 };
 export const startUpdatingComment = (content: string, dbid: string, id: string) => {
@@ -86,7 +105,7 @@ export const startCreatingReply = (dbid: string, idToReply: string, content: str
 				createdAt: new Date().getDate(),
 				user: currentUser,
 				id: uuidv4(),
-			})
+			}),
 		});
 	};
 };
