@@ -4,7 +4,6 @@ import { AddComment, CardContent, CardFooter, CardHeader, LogoutButton } from '.
 
 export const CommentsFromPeople = () => {
 	const { comments, currentUser } = useAppSelector((state) => state.comments);
-
 	return (
 		<>
 			<LogoutButton />
@@ -22,7 +21,13 @@ export const CommentsFromPeople = () => {
 									isUserComment={isUserComment}
 								/>
 								<CardContent content={comment.content} />
-								<CardFooter score={comment.score} isUser={isUserComment} id={comment.id} dbid={comment.dbid} isReply={false}/>
+								<CardFooter
+									score={comment.score}
+									isUser={isUserComment}
+									id={comment.id}
+									dbid={comment.dbid}
+									isReply={false}
+								/>
 							</CommentCardLayout>
 							{comment.replies?.length !== 0 &&
 								comment.replies.map((replie) => {
@@ -36,7 +41,13 @@ export const CommentsFromPeople = () => {
 												isUserComment={isUserReply}
 											/>
 											<CardContent content={replie.content} />
-											<CardFooter score={replie.score} id={replie.id} dbid={comment.dbid} isUser={isUserReply} isReply/>
+											<CardFooter
+												score={replie.score}
+												id={replie.id}
+												dbid={comment.dbid}
+												isUser={isUserReply}
+												isReply
+											/>
 										</CommentCardLayout>
 									);
 								})}

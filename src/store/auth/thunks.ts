@@ -11,31 +11,13 @@ import { setComments, setUser } from '../app';
 import { loadComments } from '../../helpers';
 
 export const checkingAuth = () => {
-	return async (
-		dispatch: ThunkDispatch<
-			{
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>
-	) => {
+	return async (dispatch: ThunkDispatch<{ auth: AuthSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>) => {
 		dispatch(checkingCredentials());
 	};
 };
 
 export const startLoginWithEmail = ({ email, password }: { email: string; password: string }) => {
-	return async (
-		dispatch: ThunkDispatch<
-			{
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>
-	) => {
+	return async (dispatch: ThunkDispatch<{ auth: AuthSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>) => {
 		dispatch(checkingCredentials());
 		const result = await loginWithEmailPassword({ email, password });
 		if (!result.ok) return dispatch(logout(result.errorMessage));
@@ -45,16 +27,7 @@ export const startLoginWithEmail = ({ email, password }: { email: string; passwo
 };
 
 export const startGoogleSignIn = () => {
-	return async (
-		dispatch: ThunkDispatch<
-			{
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>
-	) => {
+	return async (dispatch: ThunkDispatch<{ auth: AuthSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>) => {
 		dispatch(checkingCredentials());
 		const result = await signInWithGoogle();
 		if (!result.ok) return dispatch(logout(result.errorMessage));
@@ -65,16 +38,7 @@ export const startGoogleSignIn = () => {
 };
 
 export const startCreatingUserWithEmailPassword = ({ email, password, displayName }: CreatingUserProps) => {
-	return async (
-		dispatch: ThunkDispatch<
-			{
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>
-	) => {
+	return async (dispatch: ThunkDispatch<{ auth: AuthSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>) => {
 		dispatch(checkingCredentials());
 		const { ok, uid, photoURL, errorMessage } = await registerUserWithEmailPassword({ password, displayName, email });
 		if (!ok) return dispatch(logout(errorMessage));
@@ -84,16 +48,7 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
 };
 
 export const startLogout = () => {
-	return async (
-		dispatch: ThunkDispatch<
-			{
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>
-	) => {
+	return async (dispatch: ThunkDispatch<{ auth: AuthSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>) => {
 		await logoutFirebase();
 		dispatch(setUser({}));
 		dispatch(logout(null));
@@ -101,16 +56,7 @@ export const startLogout = () => {
 };
 
 export const startLoadingComments = () => {
-	return async (
-		dispatch: ThunkDispatch<
-			{
-				auth: AuthSliceValues;
-			},
-			undefined,
-			AnyAction
-		> &
-			Dispatch<AnyAction>
-	) => {
+	return async (dispatch: ThunkDispatch<{ auth: AuthSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>) => {
 		const comments = await loadComments();
 		dispatch(setComments(comments));
 	};

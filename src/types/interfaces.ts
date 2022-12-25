@@ -1,3 +1,5 @@
+import { EmptyStatement } from "typescript";
+
 export interface AuthSliceValues {
 	status: 'checking' | 'authenticated' | 'not-authenticated';
 	uid: null | string;
@@ -41,9 +43,9 @@ export interface CommentsSliceValues {
 		image: string;
 	};
 }
-type EmptyObject = {};
+type EmptyArray = [];
 
-export type CommentsSlice = EmptyObject | CommentsSliceValues;
+export type CommentsSlice = EmptyArray | CommentsSliceValues;
 export interface CardHeaderProps {
 	img: string;
 	username: string;

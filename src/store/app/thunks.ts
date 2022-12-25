@@ -17,11 +17,11 @@ import { CommentsSliceValues, NewCommentProps } from '../../types';
 import { addReply, deleteComment, setComments } from '.';
 import { v4 as uuidv4 } from 'uuid';
 
-export const startNewComment = ({ content, createdAt, id, replies, score, user }: NewCommentProps) => {
+export const startNewComment = ({ content, createdAt, id, replies, score, user, timestamp }: NewCommentProps) => {
 	return async (
 		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>
 	) => {
-		const newComment = { content, createdAt, id, replies, score, user };
+		const newComment = { content, createdAt, id, replies, score, user, timestamp };
 		const newDoc = doc(collection(FirebaseDB, `/comments`));
 		await setDoc(newDoc, newComment);
 		const comments = await loadComments();
