@@ -40,10 +40,11 @@ export const startDeletingComment = (id: string, dbid: string, isReply: boolean)
 			await deleteDoc(docRef);
 			dispatch(deleteComment(id));
 		} else {
-			comments.forEach(async (comment) => {
-				const newReplies = comment.replies.filter((reply) => reply.id !== id);
+			const commentIndex = comments.findIndex((comment) => comment.replies.find((reply) => reply.id === id));
+			if (commentIndex !== -1) {
+				const newReplies = comments[commentIndex].replies.filter((reply) => reply.id !== id);
 				await updateDoc(docRef, { replies: newReplies });
-			});
+			}
 		}
 		const newComments = await loadComments();
 		dispatch(setComments(newComments));
