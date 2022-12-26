@@ -22,6 +22,7 @@ export const useAddComment = () => {
 				},
 			})
 		);
+		setComment('')
 	};
 	const onInputChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
 		setComment(e.target.value);

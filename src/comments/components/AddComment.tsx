@@ -16,7 +16,7 @@ export const AddComment = () => {
 				></textarea>
 			</div>
 			<div className='flex justify-between items-center w-11/12'>
-				<img src={currentUser.image} alt='' className='w-8 h-8' />
+				<img src={currentUser.image} alt='' className='w-8 h-8 rounded-full' />
 				<button type='submit' className='bg-Moderateblue w-24 h-12 rounded-lg text-White font-bold'>
 					SEND
 				</button>

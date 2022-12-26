@@ -4,11 +4,11 @@
 @tailwind utilities;
 html,
 body {
-	background-color: hsl(239, 57%, 85%);
+	background-color: hsl(223, 19%, 93%);
 }
 
 .mainCommentCard {
-	@apply flex flex-col justify-between w-80 max-w-[343px] h-72 mx-auto p-3 bg-White m-5 rounded-lg
+	@apply flex flex-col justify-between w-80 max-w-[343px] mx-auto p-3 bg-White m-5 rounded-lg
 }
 .replyCommentCard {
 	@apply w-72 p-3 bg-White rounded-lg mx-auto my-5 space-y-3
@@ -51,7 +51,7 @@ body {
     height: 2px;
     top: 0;
     left: 0;
-    background: #fff;
+    background: hsl(238, 40%, 52%);
     transform: rotate(0);
     transition: all 0.5s;
 }

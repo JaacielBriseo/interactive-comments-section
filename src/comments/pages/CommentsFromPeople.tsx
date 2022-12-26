@@ -1,6 +1,6 @@
 import { CommentCardLayout } from '../../layout';
 import { useAppSelector } from '../../store';
-import { AddComment, CardContent, CardFooter, CardHeader, HamburgerButton, LogoutButton, Menu } from '../components';
+import { AddComment, CardContent, CardFooter, CardHeader, HamburgerButton, Menu } from '../components';
 
 export const CommentsFromPeople = () => {
 	const { comments, currentUser,isMobileMenuOpen } = useAppSelector((state) => state.comments);
@@ -41,7 +41,7 @@ export const CommentsFromPeople = () => {
 												username={replie.user.username}
 												isUserComment={isUserReply}
 											/>
-											<CardContent content={replie.content} />
+											<CardContent content={replie.content} replyingTo={comment.user.username}/>
 											<CardFooter
 												score={replie.score}
 												id={replie.id}

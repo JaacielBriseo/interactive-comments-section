@@ -7,7 +7,7 @@ import {
 	registerUserWithEmailPassword,
 	signInWithGoogle,
 } from '../../firebase/providers';
-import { setComments, setUser } from '../app';
+import { setComments, setUser, toggleMobileMenu } from '../app';
 import { loadComments } from '../../helpers';
 
 export const checkingAuth = () => {
@@ -22,7 +22,12 @@ export const startLoginWithEmail = ({ email, password }: { email: string; passwo
 		const result = await loginWithEmailPassword({ email, password });
 		if (!result.ok) return dispatch(logout(result.errorMessage));
 		dispatch(login(result));
-		dispatch(setUser({ username: result.displayName, image: result.photoURL }));
+		dispatch(
+			setUser({
+				username: result.displayName,
+				image: !result.photoURL ? '/images/avatars/profilepic.jpg' : result.photoURL,
+			})
+		);
 	};
 };
 
@@ -42,7 +47,7 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
 		dispatch(checkingCredentials());
 		const { ok, uid, photoURL, errorMessage } = await registerUserWithEmailPassword({ password, displayName, email });
 		if (!ok) return dispatch(logout(errorMessage));
-		dispatch(setUser({ username: displayName, image: photoURL }));
+		dispatch(setUser({ username: displayName, image: !photoURL ? '/images/avatars/profilepic.jpg' :photoURL }));
 		dispatch(login({ uid, displayName, email, photoURL }));
 	};
 };
@@ -51,6 +56,7 @@ export const startLogout = () => {
 	return async (dispatch: ThunkDispatch<{ auth: AuthSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>) => {
 		await logoutFirebase();
 		dispatch(setUser({}));
+		dispatch(toggleMobileMenu())
 		dispatch(logout(null));
 	};
 };
