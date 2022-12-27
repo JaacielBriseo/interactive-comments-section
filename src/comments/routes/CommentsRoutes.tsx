@@ -1,14 +1,14 @@
 import { useLayoutEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { useAppDispatch, startLoadingComments } from '../../store';
+import { useAppDispatch } from '../../store';
 import { CommentsFromPeople } from '../pages';
 
 export const CommentsRoutes = () => {
 	const dispatch = useAppDispatch();
 
-	useLayoutEffect(() => {
-		dispatch(startLoadingComments());
-	}, []);
+	// useLayoutEffect(() => {
+	// 	dispatch(startLoadingComments());
+	// }, []);
 
 	return (
 		<Routes>

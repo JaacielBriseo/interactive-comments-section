@@ -9,12 +9,11 @@ import {
 	getDoc,
 	setDoc,
 	updateDoc,
-} from 'firebase/firestore/lite';
+} from 'firebase/firestore';
 import { FirebaseDB } from '../../firebase/config';
 import { RootState } from '../store';
-import { loadComments } from '../../helpers';
 import { CommentsSliceValues, NewCommentProps } from '../../types';
-import { addReply, deleteComment, setComments } from '.';
+import { addReply, deleteComment } from '.';
 import { v4 as uuidv4 } from 'uuid';
 
 export const startNewComment = ({ content, createdAt, id, replies, score, user, timestamp }: NewCommentProps) => {
@@ -24,8 +23,6 @@ export const startNewComment = ({ content, createdAt, id, replies, score, user, 
 		const newComment = { content, createdAt, id, replies, score, user, timestamp };
 		const newDoc = doc(collection(FirebaseDB, `/comments`));
 		await setDoc(newDoc, newComment);
-		const comments = await loadComments();
-		dispatch(setComments(comments));
 	};
 };
 
@@ -46,8 +43,6 @@ export const startDeletingComment = (id: string, dbid: string, isReply: boolean)
 				await updateDoc(docRef, { replies: newReplies });
 			}
 		}
-		const newComments = await loadComments();
-		dispatch(setComments(newComments));
 	};
 };
 export const startUpdatingComment = (content: string, dbid: string, id: string, isReply: boolean) => {
@@ -71,8 +66,6 @@ export const startUpdatingComment = (content: string, dbid: string, id: string, 
 		} else {
 			await updateDoc(docRef, { replies: updatedReplies });
 		}
-		const newComments = await loadComments();
-		dispatch(setComments(newComments));
 	};
 };
 
@@ -95,7 +88,5 @@ export const startCreatingReply = (dbid: string, content: string) => {
 		await updateDoc(docRef, {
 			replies: arrayUnion(reply),
 		});
-		const comments = await loadComments();
-		dispatch(setComments(comments));
 	};
 };
