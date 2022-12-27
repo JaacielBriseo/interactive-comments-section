@@ -12,7 +12,6 @@ export const useLoadComments = () => {
 			querySnapshot.forEach((doc) => {
 				comments.push({ ...doc.data(), dbid: doc.id });
 			});
-			console.log(comments);
 			dispatch(setComments(comments));
 		});
 	}, []);
