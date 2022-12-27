@@ -14,5 +14,6 @@ export const useLoadComments = () => {
 			});
 			dispatch(setComments(comments));
 		});
+		// eslint-disable-next-line
 	}, []);
 };
