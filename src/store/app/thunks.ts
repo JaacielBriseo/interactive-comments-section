@@ -17,9 +17,7 @@ import { addReply, deleteComment } from '.';
 import { v4 as uuidv4 } from 'uuid';
 
 export const startNewComment = ({ content, createdAt, id, replies, score, user, timestamp }: NewCommentProps) => {
-	return async (
-		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>
-	) => {
+	return async () => {
 		const newComment = { content, createdAt, id, replies, score, user, timestamp };
 		const newDoc = doc(collection(FirebaseDB, `/comments`));
 		await setDoc(newDoc, newComment);
@@ -32,39 +30,47 @@ export const startDeletingComment = (id: string, dbid: string, isReply: boolean)
 		getState: () => RootState
 	) => {
 		const { comments } = getState().comments;
-		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
 		if (!isReply) {
+			const docRef = doc(FirebaseDB, `/comments/${dbid}`);
 			await deleteDoc(docRef);
 			dispatch(deleteComment(id));
 		} else {
 			const commentIndex = comments.findIndex((comment) => comment.replies.find((reply) => reply.id === id));
 			if (commentIndex !== -1) {
+				const commentDBID = comments[commentIndex].dbid;
+				const docRef = doc(FirebaseDB, `/comments/${commentDBID}`);
 				const newReplies = comments[commentIndex].replies.filter((reply) => reply.id !== id);
 				await updateDoc(docRef, { replies: newReplies });
 			}
 		}
 	};
 };
+
 export const startUpdatingComment = (content: string, dbid: string, id: string, isReply: boolean) => {
 	return async (
 		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>,
 		getState: () => RootState
 	) => {
 		const { comments } = getState().comments;
-		const docRef = doc(FirebaseDB, `/comments/${dbid}`);
-		const commentToUpdate = comments.find((comment) => comment.dbid === dbid);
-		const repliesSnapshot: DocumentSnapshot<DocumentData> = await getDoc(docRef);
-		const replies: { id: string; content: string }[] = repliesSnapshot.data()?.replies;
-		const updatedReplies = replies.map((reply) => {
-			if (reply.id === id) {
-				return { ...reply, content };
-			}
-			return reply;
-		});
 		if (!isReply) {
+			const docRef = doc(FirebaseDB, `/comments/${dbid}`);
+			const commentToUpdate = comments.find((comment) => comment.dbid === dbid);
 			await setDoc(docRef, { ...commentToUpdate, content }, { merge: true });
 		} else {
-			await updateDoc(docRef, { replies: updatedReplies });
+			const commentIndex = comments.findIndex((comment) => comment.replies.find((reply) => reply.id === id));
+			if (commentIndex !== -1) {
+				const commentDBID = comments[commentIndex].dbid;
+				const docRef = doc(FirebaseDB, `/comments/${commentDBID}`);
+				const repliesSnapshot: DocumentSnapshot<DocumentData> = await getDoc(docRef);
+				const replies: { id: string; content: string }[] = repliesSnapshot.data()?.replies;
+				const updatedReplies = replies.map((reply) => {
+					if (reply.id === id) {
+						return { ...reply, content };
+					}
+					return reply;
+				});
+				await updateDoc(docRef, { replies: updatedReplies });
+			}
 		}
 	};
 };
@@ -83,6 +89,7 @@ export const startCreatingReply = (dbid: string, content: string) => {
 			replyingTo: '',
 			score: 0,
 			user: currentUser,
+			timestamp: new Date().getTime(),
 		};
 		dispatch(addReply(reply));
 		await updateDoc(docRef, {

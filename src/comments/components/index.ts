@@ -5,4 +5,5 @@ export * from './CardHeader';
 export * from './FooterItem';
 export * from './HamburgerButton';
 export * from './LogoutButton';
-export * from './Menu';
+export * from './MobileMenu';
+export * from './RenderComment';

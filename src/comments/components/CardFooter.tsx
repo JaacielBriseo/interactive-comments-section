@@ -1,15 +1,10 @@
 import { FooterItem } from '.';
+import { CardFooterProps } from '../../types';
 import { useLikesCounter, useDelete, useEditComment, useReply } from '../../hooks';
-interface CardFooterProps {
-	score: number;
-	isUser?: boolean;
-	isReply: boolean;
-	id: string;
-	dbid: string;
-}
+
 export const CardFooter = ({ score, isUser, id, dbid, isReply }: CardFooterProps) => {
 	const { minusClick, plusClick, counter } = useLikesCounter(score);
-	const { onEditComment } = useEditComment({ id, dbid ,isReply });
+	const { onEditComment } = useEditComment({ id, dbid, isReply });
 	const { onDelete } = useDelete({ isReply, id, dbid });
 	const { onReply } = useReply({ dbid, id });
 	return (

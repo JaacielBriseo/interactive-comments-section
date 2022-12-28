@@ -1,5 +1,3 @@
-import { EmptyStatement } from 'typescript';
-
 export interface AuthSliceValues {
 	status: 'checking' | 'authenticated' | 'not-authenticated';
 	uid: null | string;
@@ -15,25 +13,27 @@ export interface Comment {
 	timestamp: number;
 	id: string;
 	dbid: string;
-	replies: {
-		content: string;
-		createdAt: string;
-		id: string;
-		replyingTo: string;
-		score: number;
-		replies?: {
-			[x: string]: any;
-		};
-		user: {
-			image: string;
-			username: string;
-		};
-	}[];
+	replies: Replies[];
 	score: number;
 	user: {
 		image: string;
 		username: string;
 	};
+}
+export interface Replies {
+	content: string;
+	createdAt: string;
+	id: string;
+	replyingTo: string;
+	score: number;
+	replies?: {
+		[x: string]: any;
+	};
+	user: {
+		image: string;
+		username: string;
+	};
+	dbid: string;
 }
 
 export interface CommentsSliceValues {
@@ -44,9 +44,6 @@ export interface CommentsSliceValues {
 	};
 	isMobileMenuOpen: boolean;
 }
-type EmptyArray = [];
-
-export type CommentsSlice = EmptyArray | CommentsSliceValues;
 export interface CardHeaderProps {
 	img: string;
 	username: string;
@@ -75,4 +72,11 @@ export interface NewCommentProps {
 		image: string;
 		username: string;
 	};
+}
+export interface CardFooterProps {
+	score: number;
+	isUser?: boolean;
+	isReply: boolean;
+	id: string;
+	dbid: string;
 }
