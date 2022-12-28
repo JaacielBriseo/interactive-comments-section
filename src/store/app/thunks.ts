@@ -75,7 +75,7 @@ export const startUpdatingComment = (content: string, dbid: string, id: string, 
 	};
 };
 
-export const startCreatingReply = (dbid: string, content: string) => {
+export const startCreatingReply = (dbid: string, content: string, userToReply: string) => {
 	return async (
 		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>,
 		getState: () => RootState
@@ -86,7 +86,7 @@ export const startCreatingReply = (dbid: string, content: string) => {
 			content,
 			createdAt: new Date().toString(),
 			id: uuidv4(),
-			replyingTo: '',
+			replyingTo: userToReply,
 			score: 0,
 			user: currentUser,
 			timestamp: new Date().getTime(),
@@ -107,7 +107,7 @@ export const startUpdatingLikes = (counter: number, dbid: string, id: string, is
 		if (!isReply) {
 			const docRef = doc(FirebaseDB, `/comments/${dbid}`);
 			const commentToUpdate = comments.find((comment) => comment.dbid === dbid);
-			await setDoc(docRef, { ...commentToUpdate, score:counter }, { merge: true });
+			await setDoc(docRef, { ...commentToUpdate, score: counter }, { merge: true });
 		} else {
 			const commentIndex = comments.findIndex((comment) => comment.replies.find((reply) => reply.id === id));
 			if (commentIndex !== -1) {
@@ -117,7 +117,7 @@ export const startUpdatingLikes = (counter: number, dbid: string, id: string, is
 				const replies: { id: string; counter: number }[] = repliesSnapshot.data()?.replies;
 				const updatedReplies = replies.map((reply) => {
 					if (reply.id === id) {
-						return { ...reply, score:counter };
+						return { ...reply, score: counter };
 					}
 					return reply;
 				});

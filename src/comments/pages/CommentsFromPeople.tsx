@@ -14,7 +14,9 @@ export const CommentsFromPeople = () => {
 				<div key={comment.id}>
 					{<RenderComment comment={comment} isReply={false} />}
 					{comment.replies?.length !== 0 &&
-						comment.replies.map((replie) => <RenderComment key={replie.id} comment={replie} isReply={true} />)}
+						comment.replies.map((replie) => (
+							<RenderComment key={replie.id} comment={replie} isReply={true} replyingTo={replie.replyingTo} />
+						))}
 				</div>
 			))}
 			<AddComment />

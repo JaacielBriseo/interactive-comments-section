@@ -3,7 +3,15 @@ import { useAppSelector } from '../../store';
 import { CommentCardLayout } from '../../layout';
 import { CardContent, CardFooter, CardHeader } from '.';
 
-export const RenderComment = ({ comment, isReply }: { comment: Comment | Replies; isReply: boolean }) => {
+export const RenderComment = ({
+	comment,
+	isReply,
+	replyingTo,
+}: {
+	comment: Comment | Replies;
+	isReply: boolean;
+	replyingTo?: string;
+}) => {
 	const { currentUser } = useAppSelector((state) => state.comments);
 	const isUserComment = comment.user.username === currentUser.username;
 	return (
@@ -14,7 +22,7 @@ export const RenderComment = ({ comment, isReply }: { comment: Comment | Replies
 				username={comment.user.username}
 				isUserComment={isUserComment}
 			/>
-			<CardContent content={comment.content} replyingTo={isReply ? comment.user.username : undefined} />
+			<CardContent content={comment.content} replyingTo={replyingTo} />
 			<CardFooter score={comment.score} isUser={isUserComment} id={comment.id} dbid={comment.dbid} isReply={isReply} />
 		</CommentCardLayout>
 	);
