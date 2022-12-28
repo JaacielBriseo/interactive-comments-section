@@ -24,7 +24,7 @@ export const startLoginWithEmail = ({ email, password }: { email: string; passwo
 		dispatch(
 			setUser({
 				username: result.displayName,
-				image: !result.photoURL ? '/images/avatars/profilepic.jpg' : result.photoURL,
+				image: !result.photoURL ? '/images/avatars/profile.png' : result.photoURL,
 			})
 		);
 	};
@@ -46,7 +46,7 @@ export const startCreatingUserWithEmailPassword = ({ email, password, displayNam
 		dispatch(checkingCredentials());
 		const { ok, uid, photoURL, errorMessage } = await registerUserWithEmailPassword({ password, displayName, email });
 		if (!ok) return dispatch(logout(errorMessage));
-		dispatch(setUser({ username: displayName, image: !photoURL ? '/images/avatars/profilepic.jpg' : photoURL }));
+		dispatch(setUser({ username: displayName, image: !photoURL ? '/images/avatars/profile.png' : photoURL }));
 		dispatch(login({ uid, displayName, email, photoURL }));
 	};
 };

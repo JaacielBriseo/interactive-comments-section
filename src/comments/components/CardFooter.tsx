@@ -8,8 +8,8 @@ export const CardFooter = ({ score, isUser, id, dbid, isReply }: CardFooterProps
 	const { onDelete } = useDelete({ isReply, id, dbid });
 	const { onReply } = useReply({ dbid, id });
 	return (
-		<div className='flex justify-between '>
-			<div className='flex items-center p-1 justify-between bg-VeryLightGray w-20 h-8'>
+		<div className='flex justify-between'>
+			<div className='flex items-center justify-between p-1 rounded-md bg-VeryLightGray w-20 h-8'>
 				<FooterItem icon='icon-plus' function={plusClick} />
 				<p className='text-Moderateblue font-medium'>{counter}</p>
 				<FooterItem icon='icon-minus' function={minusClick} />

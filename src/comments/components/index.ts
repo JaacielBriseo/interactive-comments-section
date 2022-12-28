@@ -7,3 +7,4 @@ export * from './HamburgerButton';
 export * from './LogoutButton';
 export * from './MobileMenu';
 export * from './RenderComment';
+export * from './Navbar';

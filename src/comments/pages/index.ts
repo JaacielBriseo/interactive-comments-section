@@ -1,1 +1,2 @@
-export * from './CommentsFromPeople'
+export * from './CommentsFromPeople';
+export * from './UserProfile';

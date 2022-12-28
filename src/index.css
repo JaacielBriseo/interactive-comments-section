@@ -8,10 +8,10 @@ body {
 }
 
 .mainCommentCard {
-	@apply flex flex-col justify-between w-80 max-w-[343px] mx-auto p-3 bg-White m-5 rounded-lg
+	@apply flex flex-col justify-between w-80 mx-auto p-3 bg-White m-5 rounded-lg md:space-y-4 md:w-8/12 lg:w-[730px]
 }
 .replyCommentCard {
-	@apply w-72 p-3 bg-White rounded-lg mx-auto my-5 space-y-3
+	@apply w-72 p-3 bg-White rounded-lg mx-auto my-5 space-y-3 md:w-6/12 lg:w-[642px]
 }
 .loader {
 	border-top-color: #3498db;

@@ -1,6 +1,5 @@
 import Swal from 'sweetalert2';
-import { startDeletingComment } from '../store';
-import { useAppDispatch } from '../store/hooks';
+import { startDeletingComment, useAppDispatch } from '../store';
 interface DeleteProps {
 	id: string;
 	dbid: string;
@@ -18,12 +17,12 @@ export const useDelete = ({ id, dbid, isReply }: DeleteProps) => {
 			denyButtonText: 'Cancel',
 			confirmButtonColor: 'hsl(358, 79%, 66%)',
 			denyButtonColor: 'hsl(211, 10%, 45%)',
-		  }).then((result) => {
+		}).then((result) => {
 			if (result.isConfirmed) {
-			  Swal.fire('Comment Deleted');
-			  dispatch(startDeletingComment(id, dbid, isReply));
+				Swal.fire('Comment Deleted');
+				dispatch(startDeletingComment(id, dbid, isReply));
 			}
-		  });
+		});
 	};
 	return { onDelete };
 };

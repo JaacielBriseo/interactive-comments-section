@@ -1,6 +1,6 @@
 import { useAppSelector } from '../../store';
 import { useLoadComments } from '../../hooks';
-import { AddComment, HamburgerButton, MobileMenu, RenderComment } from '../components';
+import { AddComment, HamburgerButton, MobileMenu, RenderComment, Navbar } from '../components';
 
 export const CommentsFromPeople = () => {
 	const { comments, isMobileMenuOpen } = useAppSelector((state) => state.comments);
@@ -9,6 +9,7 @@ export const CommentsFromPeople = () => {
 		<>
 			<HamburgerButton />
 			{isMobileMenuOpen && <MobileMenu />}
+			<Navbar />
 			{comments.map((comment) => (
 				<div key={comment.id}>
 					{<RenderComment comment={comment} isReply={false} />}
