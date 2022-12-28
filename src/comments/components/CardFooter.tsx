@@ -3,12 +3,12 @@ import { CardFooterProps } from '../../types';
 import { useLikesCounter, useDelete, useEditComment, useReply } from '../../hooks';
 
 export const CardFooter = ({ score, isUser, id, dbid, isReply }: CardFooterProps) => {
-	const { minusClick, plusClick, counter } = useLikesCounter(score);
+	const { minusClick, plusClick, counter } = useLikesCounter(score, dbid, id, isReply);
 	const { onEditComment } = useEditComment({ id, dbid, isReply });
 	const { onDelete } = useDelete({ isReply, id, dbid });
 	const { onReply } = useReply({ dbid, id });
 	return (
-		<div className='flex justify-between'>
+		<footer className='flex justify-between'>
 			<div className='flex items-center justify-between p-1 rounded-md bg-VeryLightGray w-20 h-8'>
 				<FooterItem icon='icon-plus' function={plusClick} />
 				<p className='text-Moderateblue font-medium'>{counter}</p>
@@ -22,6 +22,6 @@ export const CardFooter = ({ score, isUser, id, dbid, isReply }: CardFooterProps
 			) : (
 				<FooterItem function={onReply} color='text-Moderateblue' icon='icon-reply' text='Reply' />
 			)}
-		</div>
+		</footer>
 	);
 };

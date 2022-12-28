@@ -97,3 +97,32 @@ export const startCreatingReply = (dbid: string, content: string) => {
 		});
 	};
 };
+
+export const startUpdatingLikes = (counter: number, dbid: string, id: string, isReply: boolean) => {
+	return async (
+		dispatch: ThunkDispatch<{ comments: CommentsSliceValues }, undefined, AnyAction> & Dispatch<AnyAction>,
+		getState: () => RootState
+	) => {
+		const { comments } = getState().comments;
+		if (!isReply) {
+			const docRef = doc(FirebaseDB, `/comments/${dbid}`);
+			const commentToUpdate = comments.find((comment) => comment.dbid === dbid);
+			await setDoc(docRef, { ...commentToUpdate, score:counter }, { merge: true });
+		} else {
+			const commentIndex = comments.findIndex((comment) => comment.replies.find((reply) => reply.id === id));
+			if (commentIndex !== -1) {
+				const commentDBID = comments[commentIndex].dbid;
+				const docRef = doc(FirebaseDB, `/comments/${commentDBID}`);
+				const repliesSnapshot: DocumentSnapshot<DocumentData> = await getDoc(docRef);
+				const replies: { id: string; counter: number }[] = repliesSnapshot.data()?.replies;
+				const updatedReplies = replies.map((reply) => {
+					if (reply.id === id) {
+						return { ...reply, score:counter };
+					}
+					return reply;
+				});
+				await updateDoc(docRef, { replies: updatedReplies });
+			}
+		}
+	};
+};

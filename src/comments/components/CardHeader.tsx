@@ -2,7 +2,7 @@ import { CardHeaderProps } from '../../types';
 
 export const CardHeader = ({ img, username, createdAt, isUserComment }: CardHeaderProps) => {
 	return (
-		<div
+		<header
 			className={`flex justify-between items-center gap-4 w-[247px] h-8 md:w-full lg:mt-2 ${
 				isUserComment && 'w-[263px]'
 			}`}
@@ -15,6 +15,6 @@ export const CardHeader = ({ img, username, createdAt, isUserComment }: CardHead
 				</small>
 			)}
 			<p className='text-GrayishBlue text-xs md:text-sm lg:text-base'>{createdAt.substring(0, 10)}</p>
-		</div>
+		</header>
 	);
 };
